@@ -623,6 +623,85 @@ tbody tr:last-child td { border-bottom: 0; }
   color: var(--muted-2);
   font-size: .8rem;
 }
+
+/* ---------- Qwizzy account deletion ---------- */
+.deletion-hero { padding-bottom: 72px; }
+.deletion-shell { max-width: 1080px; }
+.deletion-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 54px;
+}
+.deletion-card,
+.deletion-aside > * {
+  border: 1px solid var(--line-soft);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+.deletion-card { padding: clamp(24px, 4vw, 44px); }
+.deletion-aside { display: grid; gap: 16px; }
+.deletion-aside .privacy-item { min-height: 0; }
+.deletion-step {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 18px;
+  opacity: .68;
+}
+.deletion-step[hidden] { display: none; }
+.deletion-step.is-active { opacity: 1; }
+.deletion-step-number {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  border-radius: 50%;
+  color: var(--accent);
+  background: var(--accent-dim);
+  font-weight: 800;
+}
+.deletion-step h2 { margin: 4px 0 10px; font-family: var(--font-display); font-size: clamp(1.55rem, 3vw, 2.15rem); }
+.deletion-step p { margin: 0 0 22px; color: var(--muted); line-height: 1.7; }
+.deletion-step form { display: grid; gap: 14px; }
+.deletion-step label:not(.deletion-confirm) { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.deletion-code-input {
+  width: 100%;
+  padding: 15px 17px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--ink-2);
+  color: var(--text);
+  font: 750 1.25rem/1 var(--font-mono);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  outline: none;
+}
+.deletion-code-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+.deletion-card .btn { justify-content: center; border: 0; cursor: pointer; }
+.deletion-danger { background: #d83d58; color: #fff; }
+.deletion-danger:hover { background: #eb4966; }
+.deletion-confirm { display: grid; grid-template-columns: 20px 1fr; gap: 11px; align-items: start; color: var(--muted); font-size: .9rem; line-height: 1.55; }
+.deletion-confirm input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
+.deletion-timer { color: var(--accent) !important; font-weight: 750; }
+.deletion-text-button { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 7px; }
+.deletion-text-button:hover { color: var(--accent); }
+.deletion-success .deletion-step-number { color: #57d59a; border-color: #57d59a; background: rgba(87,213,154,.12); }
+.deletion-support { margin-top: 18px; text-align: center; }
+.deletion-note { margin: 0; padding: 20px 22px; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+.form-status { min-height: 1.5em; margin: 22px 0 0 56px; color: var(--muted); font-size: .88rem; }
+.form-status[data-kind="error"] { color: #ff6b82; }
+.form-status[data-kind="success"] { color: #57d59a; }
+@media (max-width: 800px) {
+  .deletion-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .deletion-card { padding: 22px 18px; }
+  .deletion-step { grid-template-columns: 1fr; }
+  .form-status { margin-left: 0; }
+}
 @media (max-width: 900px) {
   .qwizzy-feature-grid { grid-template-columns: 1fr; }
   .qwizzy-feature {

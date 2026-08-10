@@ -14,6 +14,7 @@
 <script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <script defer src="/assets/js/fx.js"></script>
+<script type="module" defer src="/assets/js/qwizzy-account-deletion.js"></script>
 <style>:root { --accent: var(--qwizzy); --accent-dim: rgba(118,87,255,.16); }</style>
 </head>
 <body>
@@ -155,7 +156,7 @@
 
         <article class="privacy-item" data-reveal>
           <h3>Sharing, storage and deletion</h3>
-          <p>Data is shared only with the service providers needed for the functions described above: Supabase, Google Firebase, Google Mobile Ads, Apple and Google Play. Online data is stored for as long as your anonymous account remains active or as required for security. In the settings, you can permanently delete your Online Duel account and the associated server data. Local data can be reset or removed by uninstalling the app.</p>
+          <p>Data is shared only with the service providers needed for the functions described above: Supabase, Google Firebase, Google Mobile Ads, Apple and Google Play. Online data is stored for as long as your anonymous account remains active or as required for security. You can permanently delete your Online Duel account and the associated server data in the app settings or through the secure <a href="/qwizzy-account-deletion" style="color:var(--accent)">web deletion request</a>. Local data can be reset or removed by uninstalling the app.</p>
         </article>
 
         <article class="privacy-item" data-reveal>
@@ -174,7 +175,74 @@
         </article>
       </div>
 
-      <p class="privacy-updated" data-reveal>Last updated: 9 August 2026</p>
+      <p class="privacy-updated" data-reveal>Last updated: 11 August 2026</p>
+    </div>
+  </section>
+
+  <!-- ===================== ACCOUNT DELETION ===================== -->
+  <section class="section" id="account-deletion">
+    <div class="shell deletion-shell">
+      <header class="stack qwizzy-intro" data-reveal>
+        <p class="eyebrow">Account deletion</p>
+        <h2 class="h-lg">Delete your Online account.</h2>
+        <p class="lede">Securely remove your anonymous Qwizzy Online account and its associated server data. Your public friend code alone is never enough to authorise deletion.</p>
+      </header>
+
+      <div class="deletion-layout">
+        <section class="deletion-card" aria-labelledby="delete-heading" data-reveal>
+          <div class="deletion-step is-active" id="request-step">
+            <span class="deletion-step-number">1</span>
+            <div>
+              <h2 id="delete-heading">Request a verification code</h2>
+              <p>Enter the eight-character friend code shown in Qwizzy. A separate six-digit code will appear only inside the app that owns the account.</p>
+              <form id="request-form" novalidate>
+                <label for="friend-code">Qwizzy friend code</label>
+                <input id="friend-code" name="friendCode" class="deletion-code-input" inputmode="text" autocomplete="off" autocapitalize="characters" maxlength="8" pattern="[A-Za-z0-9]{8}" placeholder="A1B2C3D4" required>
+                <button class="btn btn-accent" type="submit">Send code to Qwizzy</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="deletion-step" id="verify-step" hidden>
+            <span class="deletion-step-number">2</span>
+            <div>
+              <h2>Confirm in the app</h2>
+              <p>Open Qwizzy on the device that owns this account. The six-digit code appears automatically and remains valid for ten minutes.</p>
+              <p class="deletion-timer" id="deletion-timer" aria-live="polite"></p>
+              <form id="verify-form" novalidate>
+                <label for="verification-code">Six-digit verification code</label>
+                <input id="verification-code" name="verificationCode" class="deletion-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456" required>
+                <label class="deletion-confirm">
+                  <input id="permanent-confirm" type="checkbox" required>
+                  <span>I understand that my Qwizzy Online account and associated server data will be permanently deleted.</span>
+                </label>
+                <button class="btn deletion-danger" type="submit">Permanently delete account</button>
+                <button class="deletion-text-button" id="restart-request" type="button">Use a different friend code</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="deletion-step deletion-success" id="success-step" hidden>
+            <span class="deletion-step-number">✓</span>
+            <div><h2>Account deleted</h2><p>Your Qwizzy Online account and associated server data have been permanently removed. Qwizzy will disable Online Duel until you explicitly create a new account.</p></div>
+          </div>
+
+          <p class="form-status" id="deletion-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <aside class="deletion-aside" data-reveal data-d="100">
+          <div class="privacy-item">
+            <h3>What is deleted?</h3>
+            <p>Your anonymous Online account, profile, friend code, online matches, leaderboard data, invitations, reports, push tokens and submitted-question records linked to the account.</p>
+          </div>
+          <div class="privacy-item">
+            <h3>No longer have the app?</h3>
+            <p>You can still request deletion without reinstalling Qwizzy. Email us with your friend code and player name so we can begin a manual ownership check.</p>
+            <a class="btn btn-ghost deletion-support" href="mailto:generisdatabase@gmail.com?subject=Qwizzy%20account%20deletion%20request&amp;body=Friend%20code%3A%0APlayer%20name%3A%0APlatform%20(iOS%20or%20Android)%3A%0A%0AI%20request%20permanent%20deletion%20of%20my%20Qwizzy%20Online%20account%20and%20associated%20server%20data.">Request manual deletion</a>
+          </div>
+          <p class="deletion-note">Never share the six-digit verification code with anyone. Generis Data Base will never ask for it by email.</p>
+        </aside>
+      </div>
     </div>
   </section>
 
@@ -194,7 +262,7 @@
         </a>
         <p style="color:var(--muted);font-size:.88rem;max-width:34ch">Independent software studio building focused apps for macOS, iOS and Android.</p>
       </div>
-      <div><h5>Products</h5><a href="/qwizzy">Qwizzy</a><a href="/qwizzy#privacy">Qwizzy privacy</a><a href="/wiksy">Wiksy</a><a href="/barlingo">BarLingo</a></div>
+      <div><h5>Products</h5><a href="/qwizzy">Qwizzy</a><a href="/qwizzy#privacy">Qwizzy privacy</a><a href="/qwizzy-account-deletion">Delete Qwizzy account</a><a href="/wiksy">Wiksy</a><a href="/barlingo">BarLingo</a></div>
       <div><h5>Studio</h5><a href="/contact">Contact</a><a href="/imprint">Imprint</a><a href="/privacy">Privacy</a></div>
     </div>
     <div class="foot-bottom">
