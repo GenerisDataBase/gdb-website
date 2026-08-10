@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 612" role="img" aria-label="Qwizzy quiz screen on iPhone">
+  <defs>
+    <linearGradient id="qBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#232a5c"/><stop offset=".45" stop-color="#0b1020"/><stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <linearGradient id="qBtn" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7657ff"/><stop offset="1" stop-color="#9e58ff"/>
+    </linearGradient>
+    <clipPath id="qScreen"><rect x="11" y="11" width="278" height="590" rx="37"/></clipPath>
+  </defs>
+
+  <!-- device body -->
+  <rect x="1" y="1" width="298" height="610" rx="46" fill="#15151b" stroke="#32323d" stroke-width="2"/>
+  <rect x="7" y="7" width="286" height="598" rx="41" fill="#000"/>
+
+  <g clip-path="url(#qScreen)">
+    <rect x="11" y="11" width="278" height="590" fill="url(#qBg)"/>
+
+    <!-- status bar -->
+    <text x="34" y="42" fill="#f4f5ff" font-family="system-ui,-apple-system,sans-serif" font-size="12" font-weight="600">9:41</text>
+    <rect x="228" y="32" width="22" height="11" rx="3" fill="none" stroke="#f4f5ff" stroke-opacity=".7"/>
+    <rect x="230" y="34" width="16" height="7" rx="1.5" fill="#f4f5ff" fill-opacity=".85"/>
+    <rect x="252" y="35" width="2" height="5" rx="1" fill="#f4f5ff" fill-opacity=".5"/>
+
+    <!-- header -->
+    <text x="30" y="86" fill="#f4f5ff" font-family="system-ui,-apple-system,sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">QWIZZY</text>
+    <rect x="196" y="70" width="74" height="24" rx="12" fill="#7657ff" fill-opacity=".18"/>
+    <text x="233" y="86" text-anchor="middle" fill="#b9a6ff" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700">12 / 15</text>
+
+    <!-- progress -->
+    <rect x="30" y="106" width="240" height="5" rx="2.5" fill="#ffffff" fill-opacity=".1"/>
+    <rect x="30" y="106" width="192" height="5" rx="2.5" fill="url(#qBtn)"/>
+
+    <!-- category chip -->
+    <rect x="30" y="132" width="86" height="22" rx="11" fill="#ffffff" fill-opacity=".07"/>
+    <circle cx="43" cy="143" r="3" fill="#42d392"/>
+    <text x="53" y="147" fill="#aeb6d1" font-family="system-ui,-apple-system,sans-serif" font-size="10" font-weight="600" letter-spacing=".6">SCIENCE</text>
+
+    <!-- question -->
+    <text x="30" y="192" fill="#f4f5ff" font-family="system-ui,-apple-system,sans-serif" font-size="19" font-weight="700">Which planet is</text>
+    <text x="30" y="216" fill="#f4f5ff" font-family="system-ui,-apple-system,sans-serif" font-size="19" font-weight="700">closest to the Sun?</text>
+
+    <!-- answers -->
+    <g font-family="system-ui,-apple-system,sans-serif" font-size="13.5" font-weight="600">
+      <rect x="30" y="252" width="240" height="52" rx="16" fill="#171d32" stroke="#303956"/>
+      <circle cx="52" cy="278" r="11" fill="#ffffff" fill-opacity=".07"/>
+      <text x="52" y="282" text-anchor="middle" fill="#aeb6d1" font-size="11">A</text>
+      <text x="74" y="283" fill="#e7e9fb">Venus</text>
+
+      <rect x="30" y="314" width="240" height="52" rx="16" fill="#171d32" stroke="#303956"/>
+      <circle cx="52" cy="340" r="11" fill="#ffffff" fill-opacity=".07"/>
+      <text x="52" y="344" text-anchor="middle" fill="#aeb6d1" font-size="11">B</text>
+      <text x="74" y="345" fill="#e7e9fb">Mars</text>
+
+      <rect x="30" y="376" width="240" height="52" rx="16" fill="#164639" stroke="#42d392" stroke-opacity=".75"/>
+      <circle cx="52" cy="402" r="11" fill="#42d392"/>
+      <path d="M47 402l3.4 3.4L57.6 398" fill="none" stroke="#06251a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="74" y="407" fill="#d8fff0">Mercury</text>
+
+      <rect x="30" y="438" width="240" height="52" rx="16" fill="#171d32" stroke="#303956"/>
+      <circle cx="52" cy="464" r="11" fill="#ffffff" fill-opacity=".07"/>
+      <text x="52" y="468" text-anchor="middle" fill="#aeb6d1" font-size="11">D</text>
+      <text x="74" y="469" fill="#e7e9fb">Jupiter</text>
+    </g>
+
+    <!-- next button -->
+    <rect x="30" y="514" width="240" height="48" rx="24" fill="url(#qBtn)"/>
+    <text x="150" y="544" text-anchor="middle" fill="#fff" font-family="system-ui,-apple-system,sans-serif" font-size="14" font-weight="700">Next question</text>
+
+    <rect x="110" y="580" width="80" height="4" rx="2" fill="#f4f5ff" fill-opacity=".35"/>
+  </g>
+
+  <!-- dynamic island -->
+  <rect x="108" y="22" width="84" height="24" rx="12" fill="#000"/>
+  <circle cx="178" cy="34" r="4" fill="#0d0d14"/>
+</svg>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwizzy — 15,000 quiz questions for iOS &amp; Android | Generis Data Base</title>
+<meta name="description" content="Qwizzy is a multiple-choice quiz app with roughly 15,000 hand-written questions across 25 categories and five difficulty levels.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#08080a">
+<meta property="og:title" content="Qwizzy — quiz app by Generis Data Base">
+<meta property="og:description" content="15,000 hand-written questions across 25 categories.">
+<meta property="og:image" content="/assets/img/og-image.jpg">
+<script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script defer src="/assets/js/fx.js"></script>
+<style>:root { --accent: var(--qwizzy); --accent-dim: rgba(118,87,255,.16); }</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="shell head-inner">
+    <a class="brand" href="/" aria-label="Generis Data Base — home">
+      <img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png"
+           src="/assets/img/crest-white-sm.png" alt="" width="38" height="41">
+      <span class="brand-text">
+        <span class="brand-name">Generis Data Base</span>
+        <span class="brand-sub">App Studio</span>
+      </span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="/">Home</a>
+      <a href="/products">Products</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="head-tools">
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="page-hero">
+    <div class="shell">
+      <div class="split">
+        <div class="stack" style="--gap:20px">
+          <span class="badge" data-reveal>In development · iOS &amp; Android</span>
+          <h1 class="h-xl reveal-words">Qwizzy</h1>
+          <p class="lede" data-reveal>A multiple-choice quiz app with a hand-written question library,
+            sorted into 25 categories and five difficulty levels — so the difficulty rating actually means
+            something.</p>
+          <div class="hero-cta" style="justify-content:flex-start" data-reveal data-d="120">
+            <a class="btn btn-accent" href="/contact?subject=Qwizzy">
+              Get in touch
+              <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="qwizzy-hero-art tilt" data-reveal data-d="160">
+          <img src="/assets/img/qwizzy/hero.png" alt="Qwizzy game modes and quiz screen">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <section class="section qwizzy-showcase">
+    <div class="shell">
+      <header class="stack qwizzy-intro" data-reveal>
+        <p class="eyebrow">Built for every kind of quiz night</p>
+        <h2 class="h-lg">One question library. Many ways to play.</h2>
+        <p class="lede">Play at your own pace, pass one phone around the room or challenge a friend online. Qwizzy keeps the rules simple and puts the questions first.</p>
+      </header>
+
+      <div class="qwizzy-feature-grid">
+        <article class="qwizzy-feature" data-reveal>
+          <div class="qwizzy-feature-copy">
+            <span class="badge">Five game modes</span>
+            <h3 class="h-md">Pick the mood.</h3>
+            <p>Classic for an endless run, Sudden Death when every answer counts, 3 Hearts for a little breathing room, plus local and online duels.</p>
+          </div>
+          <img src="/assets/img/qwizzy/all-modes.png" alt="Qwizzy screen showing all available quiz modes" loading="lazy">
+        </article>
+
+        <article class="qwizzy-feature" data-reveal data-d="90">
+          <div class="qwizzy-feature-copy">
+            <span class="badge">Play anywhere</span>
+            <h3 class="h-md">Challenge a friend.</h3>
+            <p>Start an online duel with a code, find a random opponent or continue an open round whenever it suits you.</p>
+          </div>
+          <img src="/assets/img/qwizzy/online-duel.png" alt="Qwizzy online duel setup screen" loading="lazy">
+        </article>
+
+        <article class="qwizzy-feature" data-reveal data-d="180">
+          <div class="qwizzy-feature-copy">
+            <span class="badge">Make it yours</span>
+            <h3 class="h-md">Your quiz. Your look.</h3>
+            <p>Choose colours, arrange the game balloons, switch appearance and language, and decide which categories belong in your round.</p>
+          </div>
+          <img src="/assets/img/qwizzy/customization.png" alt="Qwizzy appearance and category settings" loading="lazy">
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== NUMBERS ===================== -->
+  <section class="section">
+    <div class="shell">
+      <div class="stats" data-reveal>
+        <div class="stat"><b data-count="15000" data-suffix="+">0</b><small>Questions in the library</small></div>
+        <div class="stat"><b data-count="25">0</b><small>Categories</small></div>
+        <div class="stat"><b data-count="5">0</b><small>Difficulty levels</small></div>
+        <div class="stat"><b data-count="2">0</b><small>Platforms at launch</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PRIVACY ===================== -->
+  <section class="section" id="privacy">
+    <div class="shell">
+      <header class="stack qwizzy-intro" data-reveal>
+        <p class="eyebrow">Privacy policy</p>
+        <h2 class="h-lg">Your privacy matters.</h2>
+        <p class="lede">Qwizzy protects your privacy. This policy explains what data the app processes, why it is needed and what choices you have.</p>
+      </header>
+
+      <div class="privacy-list">
+        <article class="privacy-item" data-reveal>
+          <h3>Data on this device</h3>
+          <p>Settings, offline high scores, player names, premium status, level and a local copy of your submission history are stored on your device. This data is not uploaded unless one of the features described below requires it.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Online Duel and Supabase</h3>
+          <p>When Online Duel is enabled, Qwizzy creates an anonymous account and processes an anonymous user ID, nickname, friend code, player card, level, matches, leaderboard entries, invitation settings, reports and submitted questions. This data is required for online play, moderation and synchronisation.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Advertising and purchases</h3>
+          <p>The ad-supported version uses Google Mobile Ads and Google’s consent platform. Depending on your consent and region, Google may process device information, advertising IDs, IP address, diagnostic data and interactions with advertising. Purchases are handled by Apple or Google; Qwizzy does not receive payment card details.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Notifications</h3>
+          <p>If you allow notifications, Firebase Cloud Messaging and Qwizzy process a push token for your device and match information to notify you about turns and results in Online Duel. Notifications can be disabled in your device settings.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Sharing, storage and deletion</h3>
+          <p>Data is shared only with the service providers needed for the functions described above: Supabase, Google Firebase, Google Mobile Ads, Apple and Google Play. Online data is stored for as long as your anonymous account remains active or as required for security. In the settings, you can permanently delete your Online Duel account and the associated server data. Local data can be reset or removed by uninstalling the app.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Your choices and rights</h3>
+          <p>You can use the offline game modes without an Online Duel account, withdraw your advertising consent through the privacy options where available, disable notifications, restore purchases and delete your Online Duel account. Depending on your country, you may also have rights of access, rectification, restriction, objection or data portability.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Children</h3>
+          <p>Qwizzy is a quiz for a general audience and does not knowingly ask for a real name, email address, precise location or payment information. Parents and guardians should supervise children’s use of online and advertising features.</p>
+        </article>
+
+        <article class="privacy-item" data-reveal>
+          <h3>Controller and contact</h3>
+          <p>The controller is the developer of Qwizzy named in the App Store or on Google Play. Privacy enquiries can be submitted using the developer contact address provided there.</p>
+        </article>
+      </div>
+
+      <p class="privacy-updated" data-reveal>Last updated: 9 August 2026</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="/" style="margin-bottom:14px">
+          <img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png"
+               src="/assets/img/crest-white-sm.png" alt="" width="34" height="37">
+          <span class="brand-text">
+            <span class="brand-name">Generis Data Base</span>
+            <span class="brand-sub">App Studio</span>
+          </span>
+        </a>
+        <p style="color:var(--muted);font-size:.88rem;max-width:34ch">Independent software studio building focused apps for macOS, iOS and Android.</p>
+      </div>
+      <div><h5>Products</h5><a href="/qwizzy">Qwizzy</a><a href="/qwizzy#privacy">Qwizzy privacy</a><a href="/wiksy">Wiksy</a><a href="/barlingo">BarLingo</a></div>
+      <div><h5>Studio</h5><a href="/contact">Contact</a><a href="/imprint">Imprint</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-year></span> Generis Data Base</span>
+      <span>Made in Germany · <a href="/imprint" style="color:var(--accent)">Legal notice</a></span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

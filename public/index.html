@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generis Data Base — independent app studio for macOS, iOS &amp; Android</title>
+<meta name="description" content="Generis Data Base (GDB) is an independent software studio building fast, focused apps for macOS, iOS and Android — Qwizzy, Wiksy and BarLingo.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#08080a">
+<meta property="og:title" content="Generis Data Base — independent app studio">
+<meta property="og:description" content="Fast, focused apps for macOS, iOS and Android.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/assets/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script defer src="/assets/js/fx.js"></script>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="shell head-inner">
+    <a class="brand" href="/" aria-label="Generis Data Base — home">
+      <img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png"
+           src="/assets/img/crest-white-sm.png" alt="" width="38" height="41">
+      <span class="brand-text">
+        <span class="brand-name">Generis Data Base</span>
+        <span class="brand-sub">App Studio</span>
+      </span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/products">Products</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="head-tools">
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="shell hero-inner center">
+      <img class="hero-crest" data-crest
+           data-dark="/assets/img/crest-white.png" data-light="/assets/img/crest-black.png"
+           src="/assets/img/crest-white.png" alt="Generis Data Base crest" width="150" height="160">
+      <p class="eyebrow" style="justify-content:center">Independent app studio</p>
+      <h1 class="h-xl reveal-words">Apps worth trying.</h1>
+      <p class="lede">Generis Data Base is a one-person studio shipping small, sharp software for
+        macOS, iOS and Android. No bloat, no accounts you didn't ask for — just tools that open fast
+        and do one thing properly.</p>
+      <div class="hero-cta">
+        <a class="btn" href="/products">
+          See the products
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="/contact">Get in touch</a>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span>Scroll</span><i></i></div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="/" style="margin-bottom:14px">
+          <img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png"
+               src="/assets/img/crest-white-sm.png" alt="" width="34" height="37">
+          <span class="brand-text">
+            <span class="brand-name">Generis Data Base</span>
+            <span class="brand-sub">App Studio</span>
+          </span>
+        </a>
+        <p style="color:var(--muted);font-size:.88rem;max-width:34ch">Independent software studio building focused apps for macOS, iOS and Android.</p>
+      </div>
+      <div>
+        <h5>Products</h5>
+        <a href="/qwizzy">Qwizzy</a>
+        <a href="/wiksy">Wiksy</a>
+        <a href="/barlingo">BarLingo</a>
+      </div>
+      <div>
+        <h5>Studio</h5>
+        <a href="/contact">Contact</a>
+        <a href="/imprint">Imprint</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-year></span> Generis Data Base</span>
+      <span>Made in Germany · <a href="/imprint" style="color:var(--accent)">Legal notice</a></span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

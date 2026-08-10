@@ -1,0 +1,23 @@
+# NEVER commit the Firebase admin key — it grants full access to the project.
+# It belongs in the GitHub secret FIREBASE_SERVICE_ACCOUNT, not in the repo.
+*firebase-adminsdk*.json
+service-account*.json
+GoogleService-Info.plist
+google-services.json
+
+# Local secrets for running tools/weekly_export.py by hand
+.env
+.env.*
+
+# macOS / editors
+.DS_Store
+.idea/
+.vscode/
+.claude/
+gdb-website.zip
+
+# Firebase CLI
+.firebase/
+firebase-debug.log
+firestore-debug.log
+node_modules/

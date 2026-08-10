@@ -1,0 +1,106 @@
+rules_version = '2';
+
+// ============================================================================
+// Generis Data Base — Firestore security rules
+//
+// Deploy with:  firebase deploy --only firestore:rules
+//
+// Model
+//   questions/{id}          public read, created by any signed-in visitor
+//   votes/{qid}_{uid}       one document per person per question -> one vote
+//   messages/{id}           write-only for visitors, readable only by the owner
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // The Google account allowed to open /admin.html and read contact messages.
+    function adminEmail() { return 'generisdatabase@gmail.com'; }
+
+    function signedIn() { return request.auth != null; }
+
+    function isAdmin() {
+      return signedIn()
+          && request.auth.token.email == adminEmail()
+          && request.auth.token.email_verified == true;
+    }
+
+    // ---------------------------------------------------------------- questions
+    function validQuestion(d) {
+      return d.keys().hasOnly(['q','a','c','cat','dif','author','uid','up','down','score','status','createdAt'])
+          && d.q is string   && d.q.size() >= 8  && d.q.size() <= 300
+          && d.a is list     && d.a.size() == 4
+          && d.a[0] is string && d.a[0].size() > 0 && d.a[0].size() <= 160
+          && d.a[1] is string && d.a[1].size() > 0 && d.a[1].size() <= 160
+          && d.a[2] is string && d.a[2].size() > 0 && d.a[2].size() <= 160
+          && d.a[3] is string && d.a[3].size() > 0 && d.a[3].size() <= 160
+          && d.c is int      && d.c >= 0 && d.c <= 3
+          && d.cat is string && d.cat.size() > 0 && d.cat.size() <= 40
+          && d.dif is int    && d.dif >= 1 && d.dif <= 5
+          && d.author is string && d.author.size() <= 40
+          && d.up == 0 && d.down == 0 && d.score == 0
+          && d.status == 'pending'
+          && d.uid == request.auth.uid;
+    }
+
+    // A vote is valid only if the matching vote document is created in the very
+    // same batch and did not exist before. That is what makes double voting
+    // impossible without a server.
+    function castsSingleVote(qid) {
+      let voteId = qid + '_' + request.auth.uid;
+      let votePath = /databases/$(database)/documents/votes/$(voteId);
+      return  existsAfter(votePath)
+          && !exists(votePath)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['up','down','score'])
+          && request.resource.data.up   >= resource.data.up
+          && request.resource.data.down >= resource.data.down
+          && (request.resource.data.up + request.resource.data.down)
+             == (resource.data.up + resource.data.down + 1)
+          && request.resource.data.score
+             == request.resource.data.up - request.resource.data.down;
+    }
+
+    match /questions/{qid} {
+      allow read:   if true;
+      allow create: if signedIn() && validQuestion(request.resource.data);
+      allow update: if isAdmin() || (signedIn() && castsSingleVote(qid));
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------- votes
+    match /votes/{voteId} {
+      // A visitor may only ever read back their own votes.
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['qid','uid','v','at'])
+        && request.resource.data.qid is string
+        && request.resource.data.uid == request.auth.uid
+        && voteId == request.resource.data.qid + '_' + request.auth.uid
+        && (request.resource.data.v == 1 || request.resource.data.v == -1);
+
+      allow update, delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------------------- messages
+    function validMessage(d) {
+      return d.keys().hasOnly(['name','email','subject','body','createdAt','handled'])
+          && d.name is string    && d.name.size() >= 2  && d.name.size() <= 80
+          && d.email is string   && d.email.size() >= 5 && d.email.size() <= 120
+          && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+          && d.subject is string && d.subject.size() <= 60
+          && d.body is string    && d.body.size() >= 10 && d.body.size() <= 4000
+          && d.handled == false;
+    }
+
+    match /messages/{mid} {
+      allow create: if validMessage(request.resource.data);
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Everything not matched above stays closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

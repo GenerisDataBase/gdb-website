@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setup check — Generis Data Base</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta name="theme-color" content="#08080a">
+<script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script defer src="/assets/js/fx.js"></script>
+<style>
+  .check { display: flex; gap: 16px; padding: 20px 22px; border: 1px solid var(--line-soft); border-radius: var(--radius); background: var(--ink-2); }
+  .check + .check { margin-top: 12px; }
+  .check .mark { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; font-weight: 800; font-size: .8rem; margin-top: 2px; }
+  .check.pending .mark { background: var(--ink-4); color: var(--muted); }
+  .check.ok  .mark { background: color-mix(in srgb, var(--good) 22%, transparent); color: var(--good); border: 1px solid var(--good); }
+  .check.bad .mark { background: color-mix(in srgb, var(--bad) 20%, transparent); color: var(--bad); border: 1px solid var(--bad); }
+  .check h3 { font-family: var(--font-ui); font-size: 1rem; font-weight: 650; margin-bottom: 5px; }
+  .check p  { color: var(--muted); font-size: .9rem; margin: 0; }
+  .check code { font-family: var(--font-mono); font-size: .82rem; background: var(--ink-4); padding: 2px 6px; border-radius: 5px; }
+  .check .fix { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 13%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent); font-size: .87rem; }
+  ol.steps-list { color: var(--muted); padding-left: 22px; display: grid; gap: 14px; }
+  ol.steps-list strong { color: var(--text); }
+  ol.steps-list code { font-family: var(--font-mono); font-size: .84rem; background: var(--ink-3); padding: 2px 7px; border-radius: 5px; color: var(--text); }
+</style>
+</head>
+<body>
+
+<header class="site-head is-stuck">
+  <div class="shell head-inner">
+    <a class="brand" href="/">
+      <img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png"
+           src="/assets/img/crest-white-sm.png" alt="" width="38" height="41">
+      <span class="brand-text">
+        <span class="brand-name">Setup check</span>
+        <span class="brand-sub">Generis Data Base</span>
+      </span>
+    </a>
+    <div class="head-tools" style="margin-left:auto">
+      <a class="btn btn-ghost btn-sm" href="/">Back to the site</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top:130px">
+    <div class="shell" style="max-width:840px">
+
+      <div class="stack" style="--gap:14px;margin-bottom:34px">
+        <p class="eyebrow">Diagnostics</p>
+        <h1 class="h-lg">Is the backend wired up?</h1>
+        <p class="lede">This page talks to Firebase from the browser exactly the way the real pages do and reports
+          what works. It is not linked anywhere and is excluded from search engines.</p>
+      </div>
+
+      <div id="checks"></div>
+
+      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-sm" id="rerun" type="button">Run the checks again</button>
+        <a class="btn btn-ghost btn-sm" href="https://console.firebase.google.com/project/qwizzy-c9538/overview" target="_blank" rel="noopener">Open Firebase console</a>
+      </div>
+
+      <div class="card" style="margin-top:44px;padding:clamp(26px,4vw,40px)">
+        <h2 class="h-md" style="margin-bottom:20px">The one-time checklist</h2>
+        <ol class="steps-list">
+          <li><strong>Anonymous sign-in</strong> — <em>Build → Authentication → Get started → Anonymous → Enable</em>.
+            This is what gives every visitor a stable id so “one vote per person” can be enforced. Without it,
+            nobody can submit or vote.</li>
+          <li><strong>Google sign-in</strong> — same screen, <em>Add new provider → Google → Enable</em>. Only
+            <code>generisdatabase@gmail.com</code> is let into <code>/admin</code>; everyone else is signed straight
+            back out.</li>
+          <li><strong>Firestore database</strong> — <em>Build → Firestore Database → Create database</em>, region
+            <code>eur3</code> (Europe), production mode. The region cannot be changed later. Creating the database
+            also switches on the Cloud Firestore API, which the weekly export job needs.</li>
+          <li><strong>Authorised domains</strong> — <em>Authentication → Settings → Authorised domains</em>. Make sure
+            your live domain is listed, otherwise the Google popup refuses to open.</li>
+          <li><strong>Deploy</strong> — from the project folder run <code>firebase deploy</code>. That uploads the
+            site, the security rules and the indexes in one go.</li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL } from "/assets/js/config.js";
+import { ensureAnon, listQuestions, myVotes, currentUid, pingFirestore, friendlyError } from "/assets/js/db.js";
+
+const host = document.querySelector("#checks");
+
+/** Firestore retries silently for a long time — don't let a check hang forever. */
+const withTimeout = (promise, ms = 15000) => Promise.race([
+  promise,
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Timed out — Firestore did not answer.")), ms)),
+]);
+
+const CHECKS = [
+  {
+    key: "config",
+    title: "Firebase configuration",
+    run: async () => {
+      if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("YOUR_")) throw new Error("The API key in assets/js/config.js is still a placeholder.");
+      return `Project <code>${firebaseConfig.projectId}</code>, admin account <code>${ADMIN_EMAIL}</code>.`;
+    },
+    fix: "Fill in the values from Firebase console → Project settings → Your apps → Web app.",
+  },
+  {
+    key: "anon",
+    title: "Anonymous sign-in",
+    run: async () => {
+      await ensureAnon();
+      return `Signed in anonymously as <code>${currentUid()}</code>.`;
+    },
+    fix: "Firebase console → Authentication → Sign-in method → Anonymous → Enable.",
+  },
+  {
+    key: "read",
+    title: "Reading from Firestore (server, not cache)",
+    run: async () => {
+      const result = await pingFirestore();
+      if (result.fromCache) throw new Error("Answer came from the local cache — the server was not reached.");
+      const items = await listQuestions({ max: 5 });
+      return `The server answered — ${items.length} question${items.length === 1 ? "" : "s"} currently on the board.`;
+    },
+    fix: "Create the Firestore database in the Firebase console (that also switches the Cloud Firestore API on), then run 'firebase deploy --only firestore'.",
+  },
+  {
+    key: "votes",
+    title: "Reading your own votes",
+    run: async () => {
+      const mine = await myVotes();
+      return `${Object.keys(mine).length} vote${Object.keys(mine).length === 1 ? "" : "s"} recorded for this browser.`;
+    },
+    fix: "Deploy the security rules: 'firebase deploy --only firestore:rules'.",
+  },
+];
+
+function fill(node, check, state, detail) {
+  node.className = `check ${state}`;
+  node.innerHTML = `
+    <span class="mark">${state === "ok" ? "✓" : state === "bad" ? "!" : "…"}</span>
+    <div style="flex:1">
+      <h3>${check.title}</h3>
+      <p>${detail}</p>
+      ${state === "bad" ? `<div class="fix"><strong>Fix:</strong> ${check.fix}</div>` : ""}
+    </div>`;
+}
+
+async function runAll() {
+  host.innerHTML = "";
+  const nodes = CHECKS.map((check) => {
+    const node = document.createElement("div");
+    fill(node, check, "pending", "Checking…");
+    host.appendChild(node);
+    return node;
+  });
+
+  for (const [i, check] of CHECKS.entries()) {
+    try {
+      fill(nodes[i], check, "ok", await withTimeout(check.run()));
+    } catch (err) {
+      console.error(check.key, err);
+      fill(nodes[i], check, "bad", friendlyError(err));
+    }
+  }
+}
+
+document.querySelector("#rerun").addEventListener("click", runAll);
+runAll();
+</script>
+
+</body>
+</html>

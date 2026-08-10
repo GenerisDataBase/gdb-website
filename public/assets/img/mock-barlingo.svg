@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 400" role="img" aria-label="BarLingo translation popover in the macOS menu bar">
+  <defs>
+    <linearGradient id="bDesk" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a2119"/><stop offset="1" stop-color="#12100d"/>
+    </linearGradient>
+    <linearGradient id="bPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#242028"/><stop offset="1" stop-color="#191619"/>
+    </linearGradient>
+    <clipPath id="bClip"><rect x="192" y="46" width="396" height="316" rx="18"/></clipPath>
+  </defs>
+
+  <rect width="620" height="400" rx="16" fill="url(#bDesk)"/>
+  <circle cx="470" cy="60" r="170" fill="#f0913e" fill-opacity=".08"/>
+  <circle cx="110" cy="330" r="120" fill="#f0913e" fill-opacity=".05"/>
+
+  <!-- menu bar with active icon -->
+  <rect x="0" y="0" width="620" height="24" rx="16" fill="#0b0908" fill-opacity=".82"/>
+  <rect x="0" y="12" width="620" height="12" fill="#0b0908" fill-opacity=".82"/>
+  <circle cx="18" cy="12" r="4.5" fill="#ffffff" fill-opacity=".5"/>
+  <g fill="#ffffff" fill-opacity=".3">
+    <rect x="470" y="9" width="16" height="6" rx="2"/>
+    <rect x="496" y="9" width="12" height="6" rx="2"/>
+    <rect x="576" y="8" width="26" height="8" rx="2"/>
+  </g>
+  <rect x="524" y="3" width="34" height="18" rx="6" fill="#f0913e" fill-opacity=".22"/>
+  <text x="541" y="16" text-anchor="middle" fill="#f0913e" font-family="system-ui,-apple-system,sans-serif" font-size="10" font-weight="800">文A</text>
+
+  <!-- pointer -->
+  <path d="M541 26l10 14h-20z" fill="#242028"/>
+
+  <!-- panel shadow -->
+  <rect x="192" y="54" width="396" height="316" rx="18" fill="#000" fill-opacity=".5"/>
+
+  <g clip-path="url(#bClip)">
+    <rect x="192" y="46" width="396" height="316" fill="url(#bPanel)"/>
+
+    <!-- language switcher -->
+    <rect x="212" y="66" width="356" height="40" rx="12" fill="#ffffff" fill-opacity=".05"/>
+    <text x="248" y="91" fill="#f2ece6" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="650">English</text>
+    <g stroke="#f0913e" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M378 81h20m-6-6 6 6-6 6"/>
+      <path d="M398 91h-20m6 6-6-6 6-6" stroke-opacity=".45"/>
+    </g>
+    <text x="452" y="91" fill="#f2ece6" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="650">Deutsch</text>
+    <circle cx="546" cy="86" r="12" fill="#ffffff" fill-opacity=".06"/>
+    <path d="M541 86h10M546 81v10" stroke="#a89c92" stroke-width="1.6" stroke-linecap="round"/>
+
+    <!-- source -->
+    <text x="212" y="134" fill="#8d817a" font-family="system-ui,-apple-system,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6">SOURCE</text>
+    <rect x="212" y="144" width="356" height="72" rx="13" fill="#151215" stroke="#ffffff" stroke-opacity=".07"/>
+    <text x="230" y="174" fill="#efe7e0" font-family="system-ui,-apple-system,sans-serif" font-size="15">Could you point me to the</text>
+    <text x="230" y="196" fill="#efe7e0" font-family="system-ui,-apple-system,sans-serif" font-size="15">nearest pharmacy?</text>
+
+    <!-- result -->
+    <text x="212" y="242" fill="#f0913e" font-family="system-ui,-apple-system,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6">TRANSLATION</text>
+    <rect x="212" y="252" width="356" height="72" rx="13" fill="#2a1d12" stroke="#f0913e" stroke-opacity=".4"/>
+    <text x="230" y="282" fill="#ffe6cd" font-family="system-ui,-apple-system,sans-serif" font-size="15" font-weight="500">Könnten Sie mir die nächste</text>
+    <text x="230" y="304" fill="#ffe6cd" font-family="system-ui,-apple-system,sans-serif" font-size="15" font-weight="500">Apotheke zeigen?</text>
+
+    <!-- footer -->
+    <rect x="212" y="336" width="96" height="24" rx="8" fill="#ffffff" fill-opacity=".07"/>
+    <text x="260" y="352" text-anchor="middle" fill="#b4a79d" font-family="system-ui,-apple-system,sans-serif" font-size="10.5" font-weight="650">⌘C  Copy</text>
+    <text x="568" y="352" text-anchor="end" fill="#f0913e" font-family="system-ui,-apple-system,sans-serif" font-size="10.5" font-weight="700" letter-spacing=".8">BARLINGO</text>
+  </g>
+
+  <rect x="192" y="46" width="396" height="316" rx="18" fill="none" stroke="#ffffff" stroke-opacity=".12"/>
+</svg>

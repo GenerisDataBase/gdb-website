@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio console — Generis Data Base</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta name="theme-color" content="#08080a">
+<script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script defer src="/assets/js/fx.js"></script>
+<style>
+  .gate { max-width: 520px; margin: 0 auto; text-align: center; padding: clamp(30px, 5vw, 54px); }
+  .rowsel { display: flex; align-items: center; gap: 10px; }
+  input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; }
+  .toolbar {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    padding: 15px 18px; margin-bottom: 20px;
+    background: var(--ink-2); border: 1px solid var(--line-soft); border-radius: var(--radius);
+    position: sticky; top: 78px; z-index: 20; backdrop-filter: blur(14px);
+  }
+  .qsmall { font-size: .92rem; line-height: 1.45; }
+  .ans-inline { color: var(--muted); font-size: .82rem; margin-top: 6px; }
+  .ans-inline b { color: var(--good); font-weight: 650; }
+  .msg { border-left: 3px solid var(--accent); }
+  .msg.handled { border-left-color: var(--line); opacity: .6; }
+  .msg pre { white-space: pre-wrap; word-break: break-word; font: inherit; margin: 12px 0 0; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="site-head is-stuck">
+  <div class="shell head-inner">
+    <a class="brand" href="/">
+      <img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png"
+           src="/assets/img/crest-white-sm.png" alt="" width="38" height="41">
+      <span class="brand-text">
+        <span class="brand-name">Studio console</span>
+        <span class="brand-sub">Generis Data Base</span>
+      </span>
+    </a>
+    <div class="head-tools" style="margin-left:auto">
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="btn btn-ghost btn-sm hide" id="signOut" type="button">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top:130px">
+    <div class="shell">
+
+      <!-- ============ SIGN IN GATE ============ -->
+      <div class="card gate" id="gate">
+        <img src="/assets/img/crest-white.png" data-crest
+             data-dark="/assets/img/crest-white.png" data-light="/assets/img/crest-black.png"
+             alt="" width="86" style="margin:0 auto 26px">
+        <h1 class="h-md" style="margin-bottom:12px">Studio console</h1>
+        <p style="color:var(--muted);margin-bottom:26px">Sign in with the studio Google account to review community
+          questions and read the contact inbox.</p>
+        <button class="btn btn-block" id="signIn" type="button">Sign in with Google</button>
+        <p class="hint" id="gateHint" style="margin-top:18px"></p>
+      </div>
+
+      <!-- ============ CONSOLE ============ -->
+      <div class="hide" id="console">
+
+        <div class="tabs" role="tablist">
+          <button class="is-on" data-tab="questions" role="tab">Questions <span id="tabQCount"></span></button>
+          <button data-tab="messages" role="tab">Inbox <span id="tabMCount"></span></button>
+        </div>
+
+        <!-- ---------- QUESTIONS ---------- -->
+        <div data-panel="questions">
+          <div class="toolbar">
+            <select id="fStatus" aria-label="Filter by status">
+              <option value="pending">Waiting (pending)</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="">All</option>
+            </select>
+            <select id="fSort" aria-label="Sort">
+              <option value="score">Best score first</option>
+              <option value="new">Newest first</option>
+            </select>
+            <label class="rowsel" style="margin-left:6px;font-size:.85rem;color:var(--muted)">
+              min. score <input type="number" id="fMin" value="0" style="width:74px;padding:7px 9px">
+            </label>
+            <button class="btn btn-ghost btn-sm" id="selectAll" type="button">Select all shown</button>
+            <button class="btn btn-ghost btn-sm" id="selectNone" type="button">Clear selection</button>
+            <span style="margin-left:auto;color:var(--muted);font-size:.85rem" id="selInfo">0 selected</span>
+            <button class="btn btn-sm" id="exportBtn" type="button">Export selected as JSON</button>
+            <button class="btn btn-ghost btn-sm" id="approveBtn" type="button">Mark selected approved</button>
+            <button class="btn btn-ghost btn-sm" id="rejectBtn" type="button">Mark selected rejected</button>
+          </div>
+          <div id="qList" class="board" style="display:grid;gap:14px"></div>
+        </div>
+
+        <!-- ---------- MESSAGES ---------- -->
+        <div data-panel="messages" class="hide">
+          <div class="toolbar">
+            <span style="color:var(--muted);font-size:.85rem">Replies go out from your own mail app — the sender never
+              sees your address until you answer.</span>
+            <button class="btn btn-ghost btn-sm" id="reloadMsgs" type="button" style="margin-left:auto">Reload</button>
+          </div>
+          <div id="mList" style="display:grid;gap:14px"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { CATEGORIES, DIFFICULTIES } from "/assets/js/config.js";
+import {
+  onUser, signInAdmin, signOutAdmin, isAdmin,
+  listQuestions, setStatus, removeQuestion,
+  listMessages, markHandled, removeMessage,
+  friendlyError, whenText,
+} from "/assets/js/db.js";
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const escape = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+let questions = [];
+let messages = [];
+const selected = new Set();
+
+/* ---------------- auth ---------------- */
+$("#signIn").addEventListener("click", async () => {
+  try { await signInAdmin(); }
+  catch (err) { $("#gateHint").textContent = friendlyError(err); }
+});
+$("#signOut").addEventListener("click", () => signOutAdmin());
+
+onUser(async (user) => {
+  if (isAdmin(user)) {
+    $("#gate").classList.add("hide");
+    $("#console").classList.remove("hide");
+    $("#signOut").classList.remove("hide");
+    await Promise.all([loadQuestions(), loadMessages()]);
+  } else {
+    $("#gate").classList.remove("hide");
+    $("#console").classList.add("hide");
+    $("#signOut").classList.add("hide");
+  }
+});
+
+/* ---------------- tabs ---------------- */
+$$("[data-tab]").forEach((btn) => btn.addEventListener("click", () => {
+  $$("[data-tab]").forEach((b) => b.classList.toggle("is-on", b === btn));
+  $$("[data-panel]").forEach((p) => p.classList.toggle("hide", p.dataset.panel !== btn.dataset.tab));
+}));
+
+/* ---------------- questions ---------------- */
+function shown() {
+  const status = $("#fStatus").value;
+  const min = Number($("#fMin").value) || 0;
+  return questions.filter((q) => {
+    if (status && (q.status || "pending") !== status) return false;
+    if (((q.up || 0) - (q.down || 0)) < min) return false;
+    return true;
+  });
+}
+
+function paintQuestions() {
+  const items = shown();
+  $("#tabQCount").textContent = `(${items.length})`;
+  $("#selInfo").textContent = `${selected.size} selected`;
+
+  if (!items.length) {
+    $("#qList").innerHTML = '<div class="empty">Nothing here with these filters.</div>';
+    return;
+  }
+
+  $("#qList").innerHTML = items.map((q) => {
+    const score = (q.up || 0) - (q.down || 0);
+    return `
+    <article class="qcard" data-id="${q.id}" style="padding:20px 22px">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <input type="checkbox" data-sel ${selected.has(q.id) ? "checked" : ""} aria-label="Select question">
+        <div style="flex:1;min-width:0">
+          <p class="qsmall" style="font-weight:600;margin:0">${escape(q.q)}</p>
+          <p class="ans-inline">${(q.a || []).map((a, i) => (q.c === i ? `<b>${escape(a)} ✓</b>` : escape(a))).join(" · ")}</p>
+          <div class="meta-chips" style="margin:12px 0 0">
+            <span class="chip">${escape(CATEGORIES[q.cat] || q.cat)}</span>
+            <span class="chip">${escape(DIFFICULTIES[q.dif] || q.dif)}</span>
+            ${q.author ? `<span class="chip">by ${escape(q.author)}</span>` : ""}
+            <span class="chip">${escape(whenText(q.createdAt))}</span>
+            <span class="chip">${escape(q.status || "pending")}</span>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="score-pill" style="border:1px solid var(--line);padding:6px 12px;border-radius:99px;font-weight:700;font-variant-numeric:tabular-nums;color:${score > 0 ? "var(--good)" : score < 0 ? "var(--bad)" : "var(--muted)"}">
+            ${score > 0 ? "+" : ""}${score}
+          </div>
+          <div style="color:var(--muted-2);font-size:.75rem;margin-top:6px">▲ ${q.up || 0} · ▼ ${q.down || 0}</div>
+          <button class="btn btn-ghost btn-sm" data-del style="margin-top:10px;color:var(--bad);border-color:color-mix(in srgb,var(--bad) 35%,transparent)">Delete</button>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+$("#qList").addEventListener("change", (e) => {
+  if (!e.target.matches("[data-sel]")) return;
+  const id = e.target.closest(".qcard").dataset.id;
+  e.target.checked ? selected.add(id) : selected.delete(id);
+  $("#selInfo").textContent = `${selected.size} selected`;
+});
+
+$("#qList").addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-del]");
+  if (!btn) return;
+  const id = btn.closest(".qcard").dataset.id;
+  if (!confirm("Delete this question permanently?")) return;
+  try {
+    await removeQuestion(id);
+    questions = questions.filter((q) => q.id !== id);
+    selected.delete(id);
+    paintQuestions();
+    window.toast("Deleted.", "ok");
+  } catch (err) { window.toast(friendlyError(err), "err"); }
+});
+
+$("#selectAll").addEventListener("click", () => { shown().forEach((q) => selected.add(q.id)); paintQuestions(); });
+$("#selectNone").addEventListener("click", () => { selected.clear(); paintQuestions(); });
+["#fStatus", "#fSort", "#fMin"].forEach((s) => $(s).addEventListener("change", () => {
+  if (s === "#fSort") loadQuestions(); else paintQuestions();
+}));
+
+/* ---------- export in Qwizzy's own JSON shape ---------- */
+$("#exportBtn").addEventListener("click", () => {
+  const picked = questions.filter((q) => selected.has(q.id));
+  if (!picked.length) { window.toast("Nothing selected.", "err"); return; }
+
+  const payload = picked.map((q) => ({
+    id: `web-${q.id}`,
+    cat: q.cat,
+    dif: Number(q.dif),
+    q: q.q.trim(),
+    a: (q.a || []).map((a) => a.trim()),
+    c: Number(q.c),
+  }));
+
+  const stamp = new Date().toISOString().slice(0, 7);
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `qwizzy-community-${stamp}.json`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  window.toast(`${payload.length} question${payload.length === 1 ? "" : "s"} exported.`, "ok");
+});
+
+async function bulkStatus(status) {
+  const ids = [...selected];
+  if (!ids.length) { window.toast("Nothing selected.", "err"); return; }
+  if (!confirm(`Mark ${ids.length} question(s) as ${status}?`)) return;
+  try {
+    await Promise.all(ids.map((id) => setStatus(id, status)));
+    questions.forEach((q) => { if (selected.has(q.id)) q.status = status; });
+    selected.clear();
+    paintQuestions();
+    window.toast(`Marked as ${status}.`, "ok");
+  } catch (err) { window.toast(friendlyError(err), "err"); }
+}
+$("#approveBtn").addEventListener("click", () => bulkStatus("approved"));
+$("#rejectBtn").addEventListener("click", () => bulkStatus("rejected"));
+
+async function loadQuestions() {
+  try {
+    questions = await listQuestions({ sort: $("#fSort").value, max: 500 });
+    paintQuestions();
+  } catch (err) {
+    $("#qList").innerHTML = `<div class="notice bad"><span>${escape(friendlyError(err))}</span></div>`;
+  }
+}
+
+/* ---------------- messages ---------------- */
+function paintMessages() {
+  $("#tabMCount").textContent = `(${messages.filter((m) => !m.handled).length})`;
+  if (!messages.length) {
+    $("#mList").innerHTML = '<div class="empty">The inbox is empty.</div>';
+    return;
+  }
+  $("#mList").innerHTML = messages.map((m) => {
+    const subject = `Re: ${m.subject || "your message"} — Generis Data Base`;
+    const greeting = `Hi ${(m.name || "").split(" ")[0] || "there"},\n\n`;
+    const mailto = `mailto:${encodeURIComponent(m.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(greeting)}`;
+    return `
+    <article class="card msg ${m.handled ? "handled" : ""}" data-id="${m.id}" style="padding:22px 24px">
+      <div style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap">
+        <strong>${escape(m.name)}</strong>
+        <a href="mailto:${escape(m.email)}" style="color:var(--accent);font-size:.88rem">${escape(m.email)}</a>
+        <span class="chip">${escape(m.subject || "General")}</span>
+        <span class="chip">${escape(whenText(m.createdAt))}</span>
+      </div>
+      <pre>${escape(m.body)}</pre>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-sm" href="${mailto}">Reply by email</a>
+        <button class="btn btn-ghost btn-sm" data-handled>${m.handled ? "Mark unhandled" : "Mark handled"}</button>
+        <button class="btn btn-ghost btn-sm" data-delmsg style="color:var(--bad);border-color:color-mix(in srgb,var(--bad) 35%,transparent)">Delete</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+$("#mList").addEventListener("click", async (e) => {
+  const card = e.target.closest(".msg");
+  if (!card) return;
+  const id = card.dataset.id;
+  const item = messages.find((m) => m.id === id);
+
+  if (e.target.closest("[data-handled]")) {
+    try {
+      await markHandled(id, !item.handled);
+      item.handled = !item.handled;
+      paintMessages();
+    } catch (err) { window.toast(friendlyError(err), "err"); }
+  }
+
+  if (e.target.closest("[data-delmsg]")) {
+    if (!confirm("Delete this message permanently?")) return;
+    try {
+      await removeMessage(id);
+      messages = messages.filter((m) => m.id !== id);
+      paintMessages();
+      window.toast("Deleted.", "ok");
+    } catch (err) { window.toast(friendlyError(err), "err"); }
+  }
+});
+
+$("#reloadMsgs").addEventListener("click", loadMessages);
+
+async function loadMessages() {
+  try {
+    messages = await listMessages();
+    paintMessages();
+  } catch (err) {
+    $("#mList").innerHTML = `<div class="notice bad"><span>${escape(friendlyError(err))}</span></div>`;
+  }
+}
+</script>
+
+</body>
+</html>
