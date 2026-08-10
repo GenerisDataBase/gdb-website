@@ -672,12 +672,29 @@ tbody tr:last-child td { border-bottom: 0; }
   padding: 15px 17px;
   border: 1px solid var(--line);
   border-radius: 13px;
-  background: var(--ink-2);
-  color: var(--text);
+  background: var(--ink-2) !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--accent);
+  -webkit-appearance: none;
+  appearance: none;
   font: 750 1.25rem/1 var(--font-mono);
   letter-spacing: .15em;
   text-transform: uppercase;
   outline: none;
+}
+.deletion-code-input::placeholder {
+  color: var(--muted-2);
+  -webkit-text-fill-color: var(--muted-2);
+  opacity: 1;
+}
+.deletion-code-input:-webkit-autofill,
+.deletion-code-input:-webkit-autofill:hover,
+.deletion-code-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--accent);
+  box-shadow: 0 0 0 1000px var(--ink-2) inset;
+  transition: background-color 9999s ease-out 0s;
 }
 .deletion-code-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 .deletion-card .btn { justify-content: center; border: 0; cursor: pointer; }
