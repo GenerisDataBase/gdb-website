@@ -226,7 +226,11 @@ p:last-child { margin-bottom: 0; }
 }
 .hero-inner { position: relative; z-index: 2; padding: 130px 0 90px; }
 .hero-crest {
-  width: clamp(94px, 13vw, 150px); margin: 0 auto 34px;
+  display: block;
+  width: clamp(94px, 13vw, 150px);
+  height: auto;
+  margin: 0 auto 34px;
+  object-fit: contain;
   filter: drop-shadow(0 0 42px rgba(211, 178, 113, .3));
   animation: float 7s var(--ease-io) infinite;
 }
