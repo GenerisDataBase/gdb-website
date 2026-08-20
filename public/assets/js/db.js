@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider, signInWithPopup, signOut,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {
-  getFirestore, collection, doc, addDoc, getDoc, getDocs, getDocsFromServer, setDoc,
+  initializeFirestore, collection, doc, addDoc, getDoc, getDocs, getDocsFromServer, setDoc,
   updateDoc, deleteDoc, query, where, orderBy, limit as fbLimit,
   serverTimestamp, increment, writeBatch, Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
@@ -17,7 +17,12 @@ import { firebaseConfig, ADMIN_EMAIL } from "./config.js";
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Some privacy-focused browsers, VPNs and proxies buffer Firestore's default
+// streaming transport. Auto-detecting long polling keeps requests moving in
+// those environments instead of leaving forms waiting indefinitely.
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+});
 
 const QUESTIONS = "questions";
 const VOTES = "votes";
@@ -181,7 +186,25 @@ export async function sendMessage(input) {
     createdAt: serverTimestamp(),
     handled: false,
   };
-  await addDoc(collection(db, MESSAGES), payload);
+  // Firestore retries network failures internally and its write promise can
+  // otherwise remain pending forever. The UI needs a definite outcome so a
+  // visitor can retry instead of being stuck on “Sending…”.
+  const timeoutMs = 15000;
+  let timer;
+  try {
+    await Promise.race([
+      addDoc(collection(db, MESSAGES), payload),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          const err = new Error("The message service did not respond in time. Please check your connection and try again.");
+          err.code = "gdb/request-timeout";
+          reject(err);
+        }, timeoutMs);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function listMessages() {
@@ -212,6 +235,9 @@ export function friendlyError(err) {
   }
   if (code.includes("unavailable") || code.includes("network")) {
     return "No connection to Firestore. Please check your internet connection.";
+  }
+  if (code.includes("request-timeout")) {
+    return "The message service did not respond in time. Please check your connection and try again.";
   }
   if (code.includes("failed-precondition")) {
     return "Firestore needs a composite index for this filter combination — open the browser console and follow the link Firebase prints there.";
