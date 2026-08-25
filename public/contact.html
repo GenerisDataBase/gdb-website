@@ -123,7 +123,12 @@
 
           <div id="formError" class="notice bad hide" style="margin-bottom:18px">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></svg>
-            <span id="formErrorText"></span>
+            <span>
+              <span id="formErrorText"></span>
+              <a id="emailFallback" class="hide" href="#" style="display:block;color:inherit;font-weight:700;margin-top:8px;text-decoration:underline">
+                Send this message by email instead
+              </a>
+            </span>
           </div>
 
           <button class="btn" type="submit" id="submitBtn">
@@ -200,6 +205,14 @@ const showError = (text) => {
   $("#formError").classList.remove("hide");
 };
 
+const setEmailFallback = ({ name, email, subject, body }) => {
+  const mailSubject = `[Website · ${subject}] Message from ${name}`;
+  const mailBody = `${body}\n\n—\nFrom: ${name}\nReply to: ${email}`;
+  const link = $("#emailFallback");
+  link.href = `mailto:generisdatabase@gmail.com?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+  link.classList.remove("hide");
+};
+
 $("#form").addEventListener("submit", async (e) => {
   e.preventDefault();
   if ($("#website").value) return;             // honeypot
@@ -212,13 +225,15 @@ $("#form").addEventListener("submit", async (e) => {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return showError("That email address doesn't look right — a reply needs to reach you.");
   if (body.length < 10) return showError("Please write at least a sentence.");
   $("#formError").classList.add("hide");
+  $("#emailFallback").classList.add("hide");
 
   const btn = $("#submitBtn");
   btn.disabled = true;
   $("#submitLabel").textContent = "Sending…";
 
   try {
-    await sendMessage({ name, email, subject: $("#subject").value, body });
+    const message = { name, email, subject: $("#subject").value, body };
+    await sendMessage(message);
     $("#contactGrid").classList.add("hide");
     $("#donePanel").classList.remove("hide");
     $("#form").reset();
@@ -228,6 +243,7 @@ $("#form").addEventListener("submit", async (e) => {
   } catch (err) {
     console.error(err);
     showError(friendlyError(err));
+    setEmailFallback({ name, email, subject: $("#subject").value, body });
     window.toast("Could not send the message.", "err");
   } finally {
     btn.disabled = false;

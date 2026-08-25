@@ -3,8 +3,10 @@
    Plain script, no dependencies. Everything degrades gracefully and respects
    prefers-reduced-motion.
    ========================================================================== */
-(() => {
+(async () => {
   "use strict";
+
+  await import("/assets/js/i18n.js");
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -159,12 +161,22 @@
   }, { threshold: 0.5 });
   $$("[data-count]").forEach((el) => counters.observe(el));
 
-  /* ---------- Hero particle field ---------------------------------------- */
-  const canvas = $("#field");
+  /* ---------- Ambient particle field ------------------------------------- */
+  // One calm, decorative field is shared by every page. Pages that predate the
+  // site-wide background already contain #field; on the others it is created
+  // here. Keeping it outside <main> makes it fill the viewport consistently.
+  let canvas = $("#field");
+  if (!canvas) {
+    canvas = document.createElement("canvas");
+    canvas.id = "field";
+    canvas.setAttribute("aria-hidden", "true");
+  }
+  canvas.classList.add("ambient-field");
+  document.body.prepend(canvas);
+
   if (canvas && !reduced) {
     const ctx = canvas.getContext("2d");
     let w = 0, h = 0, dpr = 1, pts = [], raf = 0;
-    const mouse = { x: -9999, y: -9999 };
 
     const build = () => {
       const r = canvas.getBoundingClientRect();
@@ -190,18 +202,15 @@
       const base = light ? "13,13,16" : "255,255,255";
       for (const p of pts) {
         const drift = Math.sin(t / 2600 + p.ph) * 2.4;
-        const dx = p.ox - mouse.x, dy = p.oy + drift - mouse.y;
-        const d = Math.hypot(dx, dy);
-        const near = Math.max(0, 1 - d / 190);
-        const push = near * 16;
-        const x = p.ox + (d ? (dx / d) * push : 0);
-        const y = p.oy + drift + (d ? (dy / d) * push : 0);
-        const rad = 0.9 + near * 1.9;
+        const pulse = (Math.sin(t / 3200 + p.ph) + 1) / 2;
+        const x = p.ox;
+        const y = p.oy + drift;
+        const rad = 0.85 + pulse * 0.35;
         ctx.beginPath();
         ctx.arc(x, y, rad, 0, Math.PI * 2);
-        ctx.fillStyle = near > 0.05
-          ? `rgba(211,178,113,${0.22 + near * 0.68})`
-          : `rgba(${base},${light ? 0.13 : 0.16})`;
+        ctx.fillStyle = pulse > 0.82
+          ? `rgba(211,178,113,${0.10 + pulse * 0.12})`
+          : `rgba(${base},${light ? 0.10 : 0.13})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);
@@ -213,19 +222,7 @@
     const start = () => { if (!raf && onScreen && pts.length) raf = requestAnimationFrame(draw); };
     const stop = () => { cancelAnimationFrame(raf); raf = 0; };
 
-    // The canvas scrolls with the hero, so its offset has to be refreshed —
-    // but reading it on every pointermove would be a layout read per frame.
-    let rect = null;
-    const invalidate = () => { rect = null; };
-    addEventListener("scroll", invalidate, { passive: true });
-
-    addEventListener("pointermove", (e) => {
-      if (!rect) rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    }, { passive: true });
-
-    const rebuild = () => { invalidate(); build(); start(); };
+    const rebuild = () => { build(); start(); };
 
     // Two safety nets, because neither alone covers every case:
     //   - resize fires even while the tab is in the background,
@@ -236,7 +233,6 @@
 
     new IntersectionObserver(([en]) => {
       onScreen = en.isIntersecting;
-      invalidate();
       onScreen ? start() : stop();
     }).observe(canvas);
 

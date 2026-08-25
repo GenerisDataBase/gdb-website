@@ -237,7 +237,7 @@ export function friendlyError(err) {
     return "No connection to Firestore. Please check your internet connection.";
   }
   if (code.includes("request-timeout")) {
-    return "The message service did not respond in time. Please check your connection and try again.";
+    return "The website's message service is currently unavailable. Your text is still here — you can try again or send it by email instead.";
   }
   if (code.includes("failed-precondition")) {
     return "Firestore needs a composite index for this filter combination — open the browser console and follow the link Firebase prints there.";
