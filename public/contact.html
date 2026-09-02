@@ -136,8 +136,8 @@
             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
           </button>
 
-          <p class="hint" data-i18n-keep-english style="margin-top:16px">Your message and email address are stored so a reply can be sent —
-            nothing else, and nothing is passed on. See the <a href="/privacy" style="color:var(--accent)">privacy notice</a>.</p>
+          <p class="hint" data-i18n-keep-english style="margin-top:16px">Your message and email address are stored and processed only so it can be delivered and a reply can be sent.
+            See the <a href="/privacy" style="color:var(--accent)">privacy notice</a>.</p>
         </form>
 
         <aside class="stack" style="--gap:18px">
@@ -233,13 +233,18 @@ $("#form").addEventListener("submit", async (e) => {
 
   try {
     const message = { name, email, subject: $("#subject").value, body };
-    await sendMessage(message);
+    const result = await sendMessage({ ...message, website: $("#website").value });
     $("#contactGrid").classList.add("hide");
     $("#donePanel").classList.remove("hide");
     $("#form").reset();
     $("#bodyCount").textContent = "0";
     window.scrollTo({ top: 0, behavior: "smooth" });
-    window.toast("Message sent — thank you!", "ok");
+    window.toast(
+      result.delivery === "direct"
+        ? "Message sent — thank you!"
+        : "Message saved safely — email delivery is queued.",
+      "ok",
+    );
   } catch (err) {
     console.error(err);
     showError(friendlyError(err));

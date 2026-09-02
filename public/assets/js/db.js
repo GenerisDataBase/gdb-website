@@ -186,6 +186,41 @@ export async function sendMessage(input) {
     createdAt: serverTimestamp(),
     handled: false,
   };
+  const directPayload = {
+    name: payload.name,
+    email: payload.email,
+    subject: payload.subject,
+    body: payload.body,
+    website: input.website || "",
+  };
+  const controller = new AbortController();
+  const directTimer = setTimeout(() => controller.abort(), 20000);
+  try {
+    const response = await fetch(
+      "https://hvufojydbbytyastykom.supabase.co/functions/v1/send-website-contact",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(directPayload),
+        signal: controller.signal,
+      },
+    );
+    const result = await response.json().catch(() => null);
+    if (result?.ok && result?.stored) return result;
+    if (response.status === 429) {
+      const error = new Error("Too many messages. Please wait before trying again.");
+      error.code = "gdb/rate-limited";
+      throw error;
+    }
+  } catch (error) {
+    if (error?.code === "gdb/rate-limited") throw error;
+    console.warn("Direct notification unavailable; using secure queue.", error);
+  } finally {
+    clearTimeout(directTimer);
+  }
+
+  // The direct service is unavailable: retain the message in Firestore so the
+  // scheduled GitHub worker can deliver it later instead of losing it.
   // Firestore retries network failures internally and its write promise can
   // otherwise remain pending forever. The UI needs a definite outcome so a
   // visitor can retry instead of being stuck on “Sending…”.
@@ -202,6 +237,7 @@ export async function sendMessage(input) {
         }, timeoutMs);
       }),
     ]);
+    return { ok: true, stored: true, delivery: "queued" };
   } finally {
     clearTimeout(timer);
   }
@@ -220,6 +256,7 @@ export const removeMessage = (id) => deleteDoc(doc(db, MESSAGES, id));
    -------------------------------------------------------------------------- */
 export function friendlyError(err) {
   const code = (err && (err.code || err.message)) || "";
+  if (code.includes("rate-limited")) return "Too many messages were sent from this connection. Please try again later.";
   if (code.includes("permission-denied")) {
     return "Firestore refused the request. Check that the security rules are deployed (see /setup.html).";
   }
