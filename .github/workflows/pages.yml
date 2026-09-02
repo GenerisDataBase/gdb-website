@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir _site
           cp -R public/. _site/
-          for page in products qwizzy qwizzy-account-deletion wiksy barlingo contact imprint privacy admin setup; do
+          for page in products qwizzy qwizzy-badges qwizzy-account-deletion wiksy barlingo contact imprint privacy admin setup; do
             mkdir -p "_site/$page"
             cp "public/$page.html" "_site/$page/index.html"
           done
