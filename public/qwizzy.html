@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qwizzy — 14,500+ quiz questions for iOS &amp; Android | Generis Data Base</title>
-<meta name="description" content="Qwizzy is a multiple-choice quiz app with 14,500+ curated questions across 25 categories, five difficulty levels and 33 language variants.">
+<title>Qwizzy — 14,520 quiz questions for iOS &amp; Android | Generis Data Base</title>
+<meta name="description" content="Qwizzy is a multiple-choice quiz app with 14,520 curated questions across 25 categories, five difficulty levels and 33 language variants.">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <meta name="theme-color" content="#08080a">
 <meta property="og:title" content="Qwizzy — quiz app by Generis Data Base">
-<meta property="og:description" content="14,500+ curated questions across 25 categories and 33 language variants.">
+<meta property="og:description" content="14,520 curated questions across 25 categories and 33 language variants.">
 <meta property="og:url" content="https://generisdatabase.com/qwizzy">
 <meta property="og:image" content="https://generisdatabase.com/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg">
 <link rel="canonical" href="https://generisdatabase.com/qwizzy">
@@ -18,7 +18,7 @@
 <script defer src="/assets/js/fx.js"></script>
 <script type="module" defer src="/assets/js/qwizzy-account-deletion.mjs"></script>
 <script type="module" src="/assets/js/privacy-translations.mjs"></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Qwizzy","applicationCategory":"GameApplication","operatingSystem":"iOS, Android","url":"https://generisdatabase.com/qwizzy","description":"A multiple-choice quiz app with more than 14,500 curated questions across 25 categories.","author":{"@type":"Organization","name":"Generis Data Base","url":"https://generisdatabase.com/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Qwizzy","applicationCategory":"GameApplication","operatingSystem":"iOS, Android","url":"https://generisdatabase.com/qwizzy","description":"A multiple-choice quiz app with 14,520 curated questions across 25 categories.","author":{"@type":"Organization","name":"Generis Data Base","url":"https://generisdatabase.com/"}}</script>
 <style>:root { --accent: var(--qwizzy); --accent-dim: rgba(118,87,255,.16); }</style>
 </head>
 <body>
@@ -60,13 +60,28 @@
         <div class="stack" style="--gap:20px">
           <span class="badge" data-reveal>In development · iOS &amp; Android</span>
           <h1 class="h-xl reveal-words">Qwizzy</h1>
-          <p class="lede" data-reveal>A multiple-choice quiz app with more than 14,500 curated and reviewed questions,
+          <p class="lede" data-reveal>A multiple-choice quiz app with 14,520 curated and reviewed questions,
             organised into 25 categories, five difficulty levels and 33 language variants.</p>
-          <div class="hero-cta" style="justify-content:flex-start" data-reveal data-d="120">
-            <a class="btn btn-accent" href="/contact?subject=Qwizzy">
-              Get in touch
-              <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
-            </a>
+          <div class="qwizzy-store-access" id="get-qwizzy" data-reveal data-d="120">
+            <p class="qwizzy-store-heading">Qwizzy for iOS and Android</p>
+            <div class="qwizzy-store-links">
+              <a class="qwizzy-store-link" href="https://apps.apple.com/app/id6798674761" aria-label="Open Qwizzy in the App Store">
+                <span class="qwizzy-store-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M11 19h2"/></svg>
+                </span>
+                <span><small>For iPhone and iPad</small><strong>App Store</strong></span>
+                <svg class="qwizzy-store-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
+              </a>
+              <a class="qwizzy-store-link" href="https://play.google.com/store/apps/details?id=de.gianluca.qwizzy" aria-label="Open Qwizzy on Google Play">
+                <span class="qwizzy-store-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 4 11 8L7 20Z"/></svg>
+                </span>
+                <span><small>For Android</small><strong>Google Play</strong></span>
+                <svg class="qwizzy-store-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
+              </a>
+            </div>
+            <p class="qwizzy-store-note">Qwizzy is currently in testing. These permanent links will open the stores as soon as the public releases are available.</p>
+            <a class="qwizzy-store-contact" href="/contact?subject=Qwizzy">Get in touch</a>
           </div>
         </div>
         <div class="qwizzy-hero-art tilt" data-reveal data-d="160">
@@ -221,7 +236,7 @@
 
         <article class="privacy-item" data-reveal>
           <h3>Advertising and purchases</h3>
-          <p>The ad-supported version uses Google Mobile Ads and Google’s consent platform. Depending on your consent, device settings and region, Google may process device information, advertising identifiers, IP address, diagnostics and advertising interactions. Purchases are handled by Apple or Google. To verify a purchase, Qwizzy sends the product ID, platform, receipt or purchase token and anonymous user ID to its verification service. Qwizzy does not receive payment-card details and does not retain the raw receipt or token; it stores transaction, token-hash and entitlement information needed to validate and restore access.</p>
+          <p>The ad-supported version uses Google Mobile Ads and Google’s consent platform. Depending on your consent, device settings and region, Google may process device information, advertising identifiers, IP address, diagnostics and advertising interactions. Purchases are handled exclusively by Apple or Google. Qwizzy uses the store transaction result on the device to unlock or restore Premium. Receipts, purchase tokens, the product ID and the anonymous user ID are not sent to Qwizzy servers or Supabase for this purpose. Qwizzy does not receive payment-card details.</p>
         </article>
 
         <article class="privacy-item" data-reveal>
@@ -241,7 +256,7 @@
 
         <article class="privacy-item" data-reveal>
           <h3>Providers, transfers, retention and deletion</h3>
-          <p>Data is shared only with providers needed for these functions: Supabase, Google Firebase, Google Mobile Ads, Apple and Google Play. These providers may process data outside your country under their own safeguards and privacy terms. Account-linked online data is generally kept while your anonymous account is active or as needed for security and moderation. You can delete it in the app settings or through the secure <a href="/qwizzy-account-deletion" style="color:var(--accent)">web deletion request</a>. Purchase-verification records may remain without a link to your deleted account where needed for fraud prevention, accounting or legal obligations. Local data can be reset in the app or removed by uninstalling it; provider security logs follow the provider’s retention rules.</p>
+          <p>Data is shared only with providers needed for these functions: Supabase, Google Firebase, Google Mobile Ads, Apple and Google Play. These providers may process data outside your country under their own safeguards and privacy terms. Account-linked online data is generally kept while your anonymous account is active or as needed for security and moderation. You can delete it in the app settings or through the secure <a href="/qwizzy-account-deletion" style="color:var(--accent)">web deletion request</a>. Local data can be reset in the app or removed by uninstalling it; provider security logs follow the provider’s retention rules.</p>
         </article>
 
         <article class="privacy-item" data-reveal>
@@ -310,7 +325,7 @@
 
           <div class="deletion-step deletion-success" id="success-step" tabindex="-1" hidden>
             <span class="deletion-step-number">✓</span>
-            <div><h2>Account deleted</h2><p>Your Qwizzy Online account and account-linked server data have been permanently removed. De-linked purchase-verification records may be retained as described in the privacy policy. Qwizzy will disable online features until you explicitly create a new account.</p></div>
+            <div><h2>Account deleted</h2><p>Your Qwizzy Online account and account-linked server data have been permanently removed. Qwizzy will disable online features until you explicitly create a new account.</p></div>
           </div>
 
           <p class="form-status" id="deletion-status" role="status" aria-live="polite"></p>
@@ -319,7 +334,7 @@
         <aside class="deletion-aside" data-reveal data-d="100">
           <div class="privacy-item">
             <h3>What is deleted?</h3>
-            <p>Your anonymous Online account and account-linked profile, friend code, online matches, leaderboard data, invitations, reports, push tokens, badges and submitted-question records. De-linked purchase-verification records may be retained as described above.</p>
+            <p>Your anonymous Online account and account-linked profile, friend code, online matches, leaderboard data, invitations, reports, push tokens, badges and submitted-question records.</p>
           </div>
           <div class="privacy-item">
             <h3>No longer have the app?</h3>
