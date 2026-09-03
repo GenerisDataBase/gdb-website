@@ -10,15 +10,18 @@
 <meta name="theme-color" content="#08080a">
 <meta property="og:title" content="1,000 Qwizzy badges">
 <meta property="og:description" content="The exact permanent achievement catalogue from Qwizzy in one interactive checklist.">
-<meta property="og:image" content="/assets/img/og-image.jpg">
+<meta property="og:url" content="https://generisdatabase.com/qwizzy-badges">
+<meta property="og:image" content="https://generisdatabase.com/assets/img/og-image.jpg">
+<link rel="canonical" href="https://generisdatabase.com/qwizzy-badges">
 <script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="stylesheet" href="/assets/css/qwizzy-badges.css">
 <script defer src="/assets/js/fx.js"></script>
-<script defer src="/assets/js/qwizzy-badges.js"></script>
+<script type="module" src="/assets/js/qwizzy-badges.mjs"></script>
 <style>:root { --accent: var(--qwizzy); --accent-dim: rgba(118,87,255,.16); }</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <header class="site-head">
   <div class="shell head-inner">
     <a class="brand" href="/" aria-label="Generis Data Base — home">
@@ -36,7 +39,7 @@
   </div>
 </header>
 
-<main class="badge-page">
+<main class="badge-page" id="main-content">
   <section class="badge-hero">
     <div class="shell badge-hero-grid">
       <div class="stack" style="--gap:18px">

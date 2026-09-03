@@ -10,12 +10,15 @@
 <meta name="theme-color" content="#08080a">
 <meta property="og:title" content="Products — Generis Data Base">
 <meta property="og:description" content="14,500+ curated questions, seven ways to play and 1,000 permanent achievement badges.">
-<meta property="og:image" content="/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg">
+<meta property="og:url" content="https://generisdatabase.com/products">
+<meta property="og:image" content="https://generisdatabase.com/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg">
+<link rel="canonical" href="https://generisdatabase.com/products">
 <script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <script defer src="/assets/js/fx.js"></script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
 <header class="site-head">
   <div class="shell head-inner">
@@ -44,7 +47,7 @@
   </div>
 </header>
 
-<main class="catalogue-main">
+<main class="catalogue-main" id="main-content">
 
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="hero-glow catalogue-glow" aria-hidden="true"></div>
@@ -73,7 +76,10 @@
           </div>
         </div>
         <div class="product-shot catalogue-qwizzy-shot tilt" style="--accent:var(--qwizzy);border-radius:var(--radius);border:1px solid var(--line-soft)" data-reveal data-d="120">
-          <img src="/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg" alt="Qwizzy overview showing its available quiz modes">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/01-ready-to-get-qwizzical-660.webp 660w, /assets/img/qwizzy/01-ready-to-get-qwizzical.webp 1320w" sizes="(max-width: 780px) 88vw, 420px">
+            <img src="/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg" alt="Qwizzy overview showing its available quiz modes" width="1320" height="2868" decoding="async" fetchpriority="high">
+          </picture>
         </div>
       </div>
     </div>

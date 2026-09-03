@@ -221,7 +221,15 @@ const rows = {
   "Classic for an endless run, Sudden Death when every answer counts, 3 Hearts for a little breathing room, plus local and online duels.": ["Classic für eine endlose Runde, Sudden Death, wenn jede Antwort zählt, 3 Hearts für etwas Spielraum sowie lokale und Online-Duelle.", "Classic para una partida sin fin, Sudden Death cuando cada respuesta cuenta, 3 Hearts para tener algo de margen y duelos locales y en línea.", "Classic per una partita senza fine, Sudden Death quando ogni risposta conta, 3 Hearts per avere un po' di margine, oltre ai duelli locali e online."],
   "Start an online duel with a code, find a random opponent or continue an open round whenever it suits you.": ["Starte ein Online-Duell mit einem Code, finde einen zufälligen Gegner oder setze eine offene Runde fort, wann immer es für dich passt.", "Inicia un duelo en línea con un código, encuentra un rival al azar o continúa una ronda abierta cuando te venga bien.", "Avvia un duello online con un codice, trova un avversario casuale oppure continua una partita aperta quando preferisci."],
   "Choose colours, arrange the game balloons, switch appearance and language, and decide which categories belong in your round.": ["Wähle Farben, ordne die Spielballons an, ändere Darstellung und Sprache und entscheide, welche Kategorien in deine Runde gehören.", "Elige colores, organiza los globos del juego, cambia la apariencia y el idioma y decide qué categorías formarán parte de la ronda.", "Scegli i colori, disponi i palloncini di gioco, cambia aspetto e lingua e decidi quali categorie includere nella partita."],
-  "See the products": ["Produkte ansehen", "Ver los productos", "Scopri i prodotti"]
+  "See the products": ["Produkte ansehen", "Ver los productos", "Scopri i prodotti"],
+  "Skip to content": ["Zum Inhalt springen", "Saltar al contenido", "Vai al contenuto"],
+  "Generis Data Base crest": ["Wappen von Generis Data Base", "Escudo de Generis Data Base", "Stemma di Generis Data Base"],
+  "Qwizzy overview showing its available quiz modes": ["Qwizzy-Übersicht mit den verfügbaren Spielmodi", "Vista general de Qwizzy con los modos de juego disponibles", "Panoramica di Qwizzy con le modalità di gioco disponibili"],
+  "Qwizzy screen showing the available quiz modes": ["Qwizzy-Bildschirm mit den verfügbaren Spielmodi", "Pantalla de Qwizzy con los modos de juego disponibles", "Schermata di Qwizzy con le modalità di gioco disponibili"],
+  "A timed geography question in Qwizzy": ["Eine zeitbegrenzte Geografiefrage in Qwizzy", "Una pregunta de geografía cronometrada en Qwizzy", "Una domanda di geografia a tempo in Qwizzy"],
+  "A Sudden Death question in Qwizzy": ["Eine Sudden-Death-Frage in Qwizzy", "Una pregunta de Muerte súbita en Qwizzy", "Una domanda Sudden Death in Qwizzy"],
+  "Qwizzy Online Duel setup with friend code and opponent options": ["Qwizzy-Online-Duell mit Freundescode und Gegnerauswahl", "Configuración del duelo en línea de Qwizzy con código de amigo y opciones de rival", "Configurazione del duello online di Qwizzy con codice amico e opzioni avversario"],
+  "Qwizzy Last Man Standing setup for up to ten players": ["Qwizzy Last Man Standing für bis zu zehn Spieler", "Configuración de Último en pie de Qwizzy para hasta diez jugadores", "Configurazione Last Man Standing di Qwizzy per un massimo di dieci giocatori"]
 };
 
 const dictionaries = Object.fromEntries(LANGS.slice(1).map((lang, i) => [lang, Object.fromEntries(Object.entries(rows).map(([key, values]) => [key, values[i]]))]));
@@ -284,9 +292,9 @@ function applyLanguage(lang) {
     if (!parent || parent.closest("script,style,svg,.reveal-words,[data-i18n-keep-english]")) continue;
     translateNode(node, dict);
   }
-  document.querySelectorAll("[placeholder],[aria-label],[title]").forEach((el) => {
+  document.querySelectorAll("[placeholder],[aria-label],[title],[alt]").forEach((el) => {
     if (el.closest("[data-i18n-keep-english]")) return;
-    if (!originalAttrs.has(el)) originalAttrs.set(el, Object.fromEntries(["placeholder","aria-label","title"].filter(a => el.hasAttribute(a)).map(a => [a, el.getAttribute(a)])));
+    if (!originalAttrs.has(el)) originalAttrs.set(el, Object.fromEntries(["placeholder","aria-label","title","alt"].filter(a => el.hasAttribute(a)).map(a => [a, el.getAttribute(a)])));
     for (const [attr, source] of Object.entries(originalAttrs.get(el))) el.setAttribute(attr, dict[source] || source);
   });
   applyMetadata(lang);

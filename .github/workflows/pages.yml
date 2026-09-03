@@ -24,14 +24,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Prepare static site with clean URLs
+      - name: Verify site, account deletion and badge catalogue
         run: |
-          mkdir _site
-          cp -R public/. _site/
-          for page in products qwizzy qwizzy-badges qwizzy-account-deletion contact imprint privacy admin setup; do
-            mkdir -p "_site/$page"
-            cp "public/$page.html" "_site/$page/index.html"
-          done
+          python3 tools/check_site.py
+          node --check public/assets/js/qwizzy-account-deletion.mjs
+          node --check public/assets/js/qwizzy-badges.mjs
+          node tools/test_account_deletion.mjs
+          node tools/test_badge_catalog.mjs
+
+      - name: Prepare static site with clean URLs
+        run: python3 tools/build_site.py --version "${GITHUB_SHA::8}"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

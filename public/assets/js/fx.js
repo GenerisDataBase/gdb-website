@@ -42,6 +42,12 @@
   const burger = $(".burger");
   const nav = $(".nav");
   if (burger && nav) {
+    const closeNav = ({ restoreFocus = false } = {}) => {
+      nav.classList.remove("is-open");
+      burger.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+      if (restoreFocus) burger.focus();
+    };
     burger.addEventListener("click", () => {
       const open = nav.classList.toggle("is-open");
       burger.setAttribute("aria-expanded", String(open));
@@ -49,10 +55,14 @@
     });
     nav.addEventListener("click", (e) => {
       if (e.target.tagName !== "A") return;
-      nav.classList.remove("is-open");
-      burger.setAttribute("aria-expanded", "false");
-      document.body.style.overflow = "";
+      closeNav();
     });
+    addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && nav.classList.contains("is-open")) closeNav({ restoreFocus: true });
+    });
+    addEventListener("resize", () => {
+      if (innerWidth > 860 && nav.classList.contains("is-open")) closeNav();
+    }, { passive: true });
   }
 
   /* ---------- Toasts ----------------------------------------------------- */

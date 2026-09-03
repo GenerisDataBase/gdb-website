@@ -1,5 +1,10 @@
-const SUPABASE_URL = "https://hvufojydbbytyastykom.supabase.co";
-const SUPABASE_KEY = "sb_publishable_mTENufIAAy8dXqiUqpdLlA_MOOqGvrr";
+import {
+  deletionRpc,
+  isDeletionRequestId,
+  normalizeFriendCode,
+  normalizeVerificationCode,
+  parseDeletionRequest,
+} from "./qwizzy-account-deletion-api.mjs";
 
 const requestForm = document.querySelector("#request-form");
 const verifyForm = document.querySelector("#verify-form");
@@ -15,25 +20,6 @@ const timer = document.querySelector("#deletion-timer");
 
 let pendingRequest = null;
 let timerId = null;
-
-async function rpc(name, payload) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
-    method: "POST",
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-  const body = await response.json().catch(() => null);
-  if (!response.ok) {
-    const error = new Error(body?.message || "Request failed");
-    error.status = response.status;
-    throw error;
-  }
-  return body;
-}
 
 function setBusy(form, busy) {
   for (const control of form.elements) control.disabled = busy;
@@ -69,7 +55,7 @@ function startTimer() {
 
 function showVerification(request) {
   pendingRequest = request;
-  sessionStorage.setItem("qwizzyDeletionRequest", JSON.stringify(request));
+  try { sessionStorage.setItem("qwizzyDeletionRequest", JSON.stringify(request)); } catch (_) {}
   requestStep.hidden = true;
   verifyStep.hidden = false;
   verifyStep.classList.add("is-active");
@@ -81,7 +67,7 @@ function showVerification(request) {
 function resetRequest() {
   clearInterval(timerId);
   pendingRequest = null;
-  sessionStorage.removeItem("qwizzyDeletionRequest");
+  try { sessionStorage.removeItem("qwizzyDeletionRequest"); } catch (_) {}
   verifyStep.hidden = true;
   requestStep.hidden = false;
   requestStep.classList.add("is-active");
@@ -93,10 +79,10 @@ function resetRequest() {
 }
 
 friendCodeInput.addEventListener("input", () => {
-  friendCodeInput.value = friendCodeInput.value.replace(/[^a-z0-9]/gi, "").toUpperCase();
+  friendCodeInput.value = normalizeFriendCode(friendCodeInput.value);
 });
 verificationInput.addEventListener("input", () => {
-  verificationInput.value = verificationInput.value.replace(/\D/g, "").slice(0, 6);
+  verificationInput.value = normalizeVerificationCode(verificationInput.value);
 });
 
 requestForm.addEventListener("submit", async (event) => {
@@ -110,19 +96,16 @@ requestForm.addEventListener("submit", async (event) => {
   setBusy(requestForm, true);
   setStatus("Creating a secure request…");
   try {
-    const result = await rpc("start_qwizzy_account_deletion", {
+    const result = await deletionRpc("start_qwizzy_account_deletion", {
       submitted_friend_code: friendCode,
     });
-    const row = Array.isArray(result) ? result[0] : result;
-    if (!row?.request_id || !row?.expires_at) throw new Error("Invalid response");
-    showVerification({
-      id: row.request_id,
-      expiresAt: new Date(row.expires_at).getTime(),
-    });
+    showVerification(parseDeletionRequest(result));
   } catch (error) {
     setStatus(
-      error.message.includes("too_many_requests")
+      error.code === "too_many_requests" || error.status === 429
         ? "Too many requests. Please wait before trying again."
+        : error.code === "timeout"
+          ? "The request timed out. Check your connection and try again."
         : "The request could not be created. Please try again later.",
       "error",
     );
@@ -151,7 +134,7 @@ verifyForm.addEventListener("submit", async (event) => {
   setBusy(verifyForm, true);
   setStatus("Verifying and deleting the account…");
   try {
-    const deleted = await rpc("confirm_qwizzy_account_deletion", {
+    const deleted = await deletionRpc("confirm_qwizzy_account_deletion", {
       submitted_request_id: pendingRequest.id,
       submitted_verification_code: code,
     });
@@ -161,15 +144,21 @@ verifyForm.addEventListener("submit", async (event) => {
       return;
     }
     clearInterval(timerId);
-    sessionStorage.removeItem("qwizzyDeletionRequest");
+    try { sessionStorage.removeItem("qwizzyDeletionRequest"); } catch (_) {}
     verifyStep.hidden = true;
     successStep.hidden = false;
     successStep.classList.add("is-active");
     setStatus("");
-  } catch (_) {
-    setStatus("The account could not be deleted. Please try again later.", "error");
+    successStep.focus();
+  } catch (error) {
+    setStatus(error.code === "timeout"
+      ? "The request timed out. Your account was not confirmed as deleted. Please check the app before trying again."
+      : "The account could not be deleted. Please try again later.", "error");
   } finally {
     setBusy(verifyForm, false);
+    if (pendingRequest?.expiresAt <= Date.now()) {
+      verifyForm.querySelector('button[type="submit"]').disabled = true;
+    }
   }
 });
 
@@ -177,8 +166,10 @@ restartButton.addEventListener("click", resetRequest);
 
 try {
   const restored = JSON.parse(sessionStorage.getItem("qwizzyDeletionRequest"));
-  if (restored?.id && restored?.expiresAt > Date.now()) showVerification(restored);
+  if (isDeletionRequestId(restored?.id) && Number.isFinite(restored?.expiresAt) && restored.expiresAt > Date.now()) showVerification(restored);
   else sessionStorage.removeItem("qwizzyDeletionRequest");
 } catch (_) {
-  sessionStorage.removeItem("qwizzyDeletionRequest");
+  try { sessionStorage.removeItem("qwizzyDeletionRequest"); } catch (_) {}
 }
+
+addEventListener("pagehide", () => clearInterval(timerId), { once: true });

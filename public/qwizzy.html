@@ -10,14 +10,18 @@
 <meta name="theme-color" content="#08080a">
 <meta property="og:title" content="Qwizzy — quiz app by Generis Data Base">
 <meta property="og:description" content="14,500+ curated questions across 25 categories and 33 language variants.">
-<meta property="og:image" content="/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg">
+<meta property="og:url" content="https://generisdatabase.com/qwizzy">
+<meta property="og:image" content="https://generisdatabase.com/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg">
+<link rel="canonical" href="https://generisdatabase.com/qwizzy">
 <script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <script defer src="/assets/js/fx.js"></script>
-<script type="module" defer src="/assets/js/qwizzy-account-deletion.js"></script>
+<script type="module" defer src="/assets/js/qwizzy-account-deletion.mjs"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Qwizzy","applicationCategory":"GameApplication","operatingSystem":"iOS, Android","url":"https://generisdatabase.com/qwizzy","description":"A multiple-choice quiz app with more than 14,500 curated questions across 25 categories.","author":{"@type":"Organization","name":"Generis Data Base","url":"https://generisdatabase.com/"}}</script>
 <style>:root { --accent: var(--qwizzy); --accent-dim: rgba(118,87,255,.16); }</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
 <header class="site-head">
   <div class="shell head-inner">
@@ -46,7 +50,7 @@
   </div>
 </header>
 
-<main>
+<main id="main-content">
 
   <!-- ===================== HERO ===================== -->
   <section class="page-hero">
@@ -65,7 +69,10 @@
           </div>
         </div>
         <div class="qwizzy-hero-art tilt" data-reveal data-d="160">
-          <img src="/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg" alt="Qwizzy overview showing its available quiz modes">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/01-ready-to-get-qwizzical-660.webp 660w, /assets/img/qwizzy/01-ready-to-get-qwizzical.webp 1320w" sizes="(max-width: 780px) 88vw, 420px">
+            <img src="/assets/img/qwizzy/01-ready-to-get-qwizzical.jpg" alt="Qwizzy overview showing its available quiz modes" width="1320" height="2868" decoding="async" fetchpriority="high">
+          </picture>
         </div>
       </div>
     </div>
@@ -87,7 +94,10 @@
             <h3 class="h-md">Pick your challenge.</h3>
             <p>Play Classic, Sudden Death, 3 Hearts, local or online duels, Last Man Standing and Moderator mode.</p>
           </div>
-          <img src="/assets/img/qwizzy/02-pick-your-challenge.jpg" alt="Qwizzy screen showing the available quiz modes" loading="lazy">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/02-pick-your-challenge-660.webp 660w, /assets/img/qwizzy/02-pick-your-challenge.webp 1320w" sizes="(max-width: 900px) 88vw, 380px">
+            <img src="/assets/img/qwizzy/02-pick-your-challenge.jpg" alt="Qwizzy screen showing the available quiz modes" width="1320" height="2868" loading="lazy" decoding="async">
+          </picture>
         </article>
 
         <article class="qwizzy-feature" data-reveal data-d="90">
@@ -96,7 +106,10 @@
             <h3 class="h-md">Think fast. Score big.</h3>
             <p>Questions span every topic, while the timer and lifelines keep each round moving.</p>
           </div>
-          <img src="/assets/img/qwizzy/03-think-fast-score-big.jpg" alt="A timed geography question in Qwizzy" loading="lazy">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/03-think-fast-score-big-660.webp 660w, /assets/img/qwizzy/03-think-fast-score-big.webp 1320w" sizes="(max-width: 900px) 88vw, 380px">
+            <img src="/assets/img/qwizzy/03-think-fast-score-big.jpg" alt="A timed geography question in Qwizzy" width="1320" height="2868" loading="lazy" decoding="async">
+          </picture>
         </article>
 
         <article class="qwizzy-feature" data-reveal data-d="180">
@@ -105,7 +118,10 @@
             <h3 class="h-md">One mistake. Game over.</h3>
             <p>Every answer counts in the most unforgiving solo mode. Stay sharp and chase a new high score.</p>
           </div>
-          <img src="/assets/img/qwizzy/04-one-mistake-game-over.jpg" alt="A Sudden Death question in Qwizzy" loading="lazy">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/04-one-mistake-game-over-660.webp 660w, /assets/img/qwizzy/04-one-mistake-game-over.webp 1320w" sizes="(max-width: 900px) 88vw, 380px">
+            <img src="/assets/img/qwizzy/04-one-mistake-game-over.jpg" alt="A Sudden Death question in Qwizzy" width="1320" height="2868" loading="lazy" decoding="async">
+          </picture>
         </article>
 
         <article class="qwizzy-feature" data-reveal>
@@ -114,7 +130,10 @@
             <h3 class="h-md">Challenge friends anywhere.</h3>
             <p>Create a code, invite a friend or find a random opponent and play a round whenever it suits you.</p>
           </div>
-          <img src="/assets/img/qwizzy/05-challenge-friends-anywhere.jpg" alt="Qwizzy Online Duel setup with friend code and opponent options" loading="lazy">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/05-challenge-friends-anywhere-660.webp 660w, /assets/img/qwizzy/05-challenge-friends-anywhere.webp 1320w" sizes="(max-width: 900px) 88vw, 380px">
+            <img src="/assets/img/qwizzy/05-challenge-friends-anywhere.jpg" alt="Qwizzy Online Duel setup with friend code and opponent options" width="1320" height="2868" loading="lazy" decoding="async">
+          </picture>
         </article>
 
         <article class="qwizzy-feature" data-reveal data-d="90">
@@ -123,7 +142,10 @@
             <h3 class="h-md">Who will be the last standing?</h3>
             <p>Bring together two to ten players on one device and keep answering until only one remains.</p>
           </div>
-          <img src="/assets/img/qwizzy/06-last-one-standing.jpg" alt="Qwizzy Last Man Standing setup for up to ten players" loading="lazy">
+          <picture class="responsive-shot">
+            <source type="image/webp" srcset="/assets/img/qwizzy/06-last-one-standing-660.webp 660w, /assets/img/qwizzy/06-last-one-standing.webp 1320w" sizes="(max-width: 900px) 88vw, 380px">
+            <img src="/assets/img/qwizzy/06-last-one-standing.jpg" alt="Qwizzy Last Man Standing setup for up to ten players" width="1320" height="2868" loading="lazy" decoding="async">
+          </picture>
         </article>
       </div>
     </div>
@@ -284,7 +306,7 @@
             </div>
           </div>
 
-          <div class="deletion-step deletion-success" id="success-step" hidden>
+          <div class="deletion-step deletion-success" id="success-step" tabindex="-1" hidden>
             <span class="deletion-step-number">✓</span>
             <div><h2>Account deleted</h2><p>Your Qwizzy Online account and account-linked server data have been permanently removed. De-linked purchase-verification records may be retained as described in the privacy policy. Qwizzy will disable online features until you explicitly create a new account.</p></div>
           </div>

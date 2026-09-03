@@ -1,23 +1,10 @@
+import { allBadges, series } from "./qwizzy-badge-catalog.mjs";
+
 (() => {
   "use strict";
 
   const STORAGE_KEY = "qwizzy-badge-checklist-v1";
   const PAGE_SIZE = 64;
-  const common = [1,3,5,10,15,20,25,30,40,50,75,100,150,200,250,500,750,1000,2500];
-  const series = [
-    ["accepted_questions",2500,91,[1,3,5,10,15,25,50,75,100,150,250,500,750,1000,1500,2500],"✓",158],
-    ["submitted_questions",2500,91,[1,3,5,10,15,25,50,75,100,150,250,500,750,1000,1500,2500],"✎",215],
-    ["daily_streak",2500,91,[1,3,5,7,10,14,21,30,50,75,100,150,200,250,365,500,750,1000,1500,2500],"🔥",28],
-    ["correct_streak",2500,91,common,"✓✓",145],
-    ["wrong_streak",2500,91,common,"×",350],
-    ["sudden_death_score",2500,91,common,"⚡",266],
-    ["three_hearts_score",2500,91,common,"♥",326],
-    ["player_level",2500,91,[2,5,10,15,20,25,30,40,50,75,100,150,200,250,500,750,1000,1500,2500],"★",42],
-    ["correct_answers",2500,91,[1,5,10,25,50,75,100,150,250,500,750,1000,1500,2500],"●",172],
-    ["wrong_answers",2500,91,[1,5,10,25,50,75,100,150,250,500,750,1000,1500,2500],"○",3],
-    ["fifty_fifty_uses",2500,90,[1,5,10,25,50,75,100,150,250,500,750,1000,1500,2500],"50",190]
-  ];
-
   const copy = {
     en:{back:"← Back to Qwizzy",eyebrow:"Permanent achievements",headline:"badges to earn.",intro:"The exact 1,000 permanent achievement badges available in Qwizzy, across eleven progress categories.",localNote:"Your checklist stays private in this browser and does not change your progress in the app.",checked:"checked",open:"still open",progress:"progress",search:"Search achievements",category:"All categories",all:"All",openButton:"Open",done:"Done",results:"achievements",emptyTitle:"Nothing found.",emptyBody:"Try another category or search term.",loadMore:"Show more badges",reach:"Reach",categories:["Accepted questions","Submitted questions","Daily streak","Best correct-answer streak","Longest wrong-answer streak","Sudden Death","3 Hearts","Player level","Correct answers","Wrong answers","50:50 joker uses"]},
     de:{back:"← Zurück zu Qwizzy",eyebrow:"Dauerhafte Erfolge",headline:"Abzeichen zum Erspielen.",intro:"Die exakt 1.000 dauerhaften Erfolgsabzeichen aus Qwizzy, verteilt auf elf Fortschrittskategorien.",localNote:"Deine Checkliste bleibt privat in diesem Browser und verändert deinen Fortschritt in der App nicht.",checked:"abgehakt",open:"noch offen",progress:"Fortschritt",search:"Erfolge suchen",category:"Alle Kategorien",all:"Alle",openButton:"Offen",done:"Erledigt",results:"Erfolge",emptyTitle:"Nichts gefunden.",emptyBody:"Versuche eine andere Kategorie oder einen anderen Suchbegriff.",loadMore:"Mehr Abzeichen anzeigen",reach:"Erreiche",categories:["Angenommene Fragen","Eingereichte Fragen","Tägliche Serie","Beste richtige Serie","Längste falsche Serie","Sudden Death","3 Herzen","Spielerlevel","Richtige Antworten","Falsche Antworten","50:50 Joker eingesetzt"]},
@@ -25,33 +12,14 @@
     it:{back:"← Torna a Qwizzy",eyebrow:"Traguardi permanenti",headline:"badge da conquistare.",intro:"I 1.000 badge traguardo permanenti esatti di Qwizzy, suddivisi in undici categorie di progresso.",localNote:"La checklist resta privata in questo browser e non modifica i progressi nell'app.",checked:"spuntati",open:"ancora aperti",progress:"progresso",search:"Cerca traguardi",category:"Tutte le categorie",all:"Tutti",openButton:"Aperti",done:"Completati",results:"traguardi",emptyTitle:"Nessun risultato.",emptyBody:"Prova un'altra categoria o un altro termine di ricerca.",loadMore:"Mostra altri badge",reach:"Raggiungi",categories:["Domande accettate","Domande inviate","Serie giornaliera","Migliore serie corretta","Serie errata più lunga","Sudden Death","3 Cuori","Livello giocatore","Risposte corrette","Risposte errate","Usi del jolly 50:50"]}
   };
 
-  const milestones = ([, maximum, count, mandatory]) => {
-    const result = [...new Set(mandatory.filter(value => value >= 1 && value <= maximum))].sort((a,b)=>a-b);
-    if (!result.includes(maximum)) result.push(maximum);
-    while (result.length < count) {
-      let largestGap = 0;
-      let insertionIndex = -1;
-      for (let index=0;index<result.length-1;index++) {
-        const gap = result[index+1]-result[index];
-        if (gap > largestGap) { largestGap=gap; insertionIndex=index; }
-      }
-      if (insertionIndex < 0 || largestGap <= 1) throw new Error(`Cannot build badge milestones for ${count}.`);
-      result.push(result[insertionIndex]+Math.floor(largestGap/2));
-      result.sort((a,b)=>a-b);
-    }
-    return result;
-  };
-
-  const allBadges = series.flatMap((definition, seriesIndex) => milestones(definition).map((value,index,list) => ({
-    id:`${definition[0]}:${value}`,key:definition[0],value,index,seriesIndex,icon:definition[4],hue:definition[5],catalogNumber:series.slice(0,seriesIndex).reduce((total,item)=>total+item[2],0)+index+1
-  })));
-  if (allBadges.length !== 1000) throw new Error(`Expected 1000 badges, got ${allBadges.length}`);
-
   let checked;
   try { checked = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")); } catch { checked = new Set(); }
   const validBadgeIds = new Set(allBadges.map(badge => badge.id));
   checked = new Set([...checked].filter(id => validBadgeIds.has(id)));
-  localStorage.setItem(STORAGE_KEY,JSON.stringify([...checked]));
+  const persistChecked = () => {
+    try { localStorage.setItem(STORAGE_KEY,JSON.stringify([...checked])); } catch (_) {}
+  };
+  persistChecked();
   let state={search:"",category:"all",status:"all",visible:PAGE_SIZE};
   let language="en";
   const el=(id)=>document.getElementById(id);
@@ -96,13 +64,19 @@
     const button=event.target.closest(".badge-card-check"); if(!button)return;
     const id=button.closest(".web-badge-card").dataset.id;
     checked.has(id)?checked.delete(id):checked.add(id);
-    localStorage.setItem(STORAGE_KEY,JSON.stringify([...checked])); render();
+    persistChecked(); render();
   });
   el("badge-search").addEventListener("input",event=>{state.search=event.target.value.trim().toLocaleLowerCase(language);state.visible=PAGE_SIZE;render();});
   el("category-filter").addEventListener("change",event=>{state.category=event.target.value;state.visible=PAGE_SIZE;render();});
   document.querySelector(".badge-status-filter").addEventListener("click",event=>{const button=event.target.closest("button[data-status]");if(!button)return;state.status=button.dataset.status;state.visible=PAGE_SIZE;document.querySelectorAll("[data-status]").forEach(item=>item.setAttribute("aria-pressed",String(item===button)));render();});
   el("load-more-badges").addEventListener("click",()=>{state.visible+=PAGE_SIZE;render();});
   addEventListener("gdb-language-change",event=>setLanguage(event.detail.language));
-  const saved=localStorage.getItem("gdb-language")||navigator.language.slice(0,2);
+  addEventListener("storage",event=>{
+    if(event.key!==STORAGE_KEY)return;
+    try { checked=new Set(JSON.parse(event.newValue||"[]").filter(id=>validBadgeIds.has(id))); render(); } catch (_) {}
+  });
+  let saved;
+  try { saved=localStorage.getItem("gdb-language"); } catch (_) {}
+  saved=saved||navigator.language.slice(0,2);
   setLanguage(saved);
 })();

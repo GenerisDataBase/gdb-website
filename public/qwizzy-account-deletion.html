@@ -13,10 +13,11 @@
 <script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <script defer src="/assets/js/fx.js"></script>
-<script type="module" defer src="/assets/js/qwizzy-account-deletion.js"></script>
+<script type="module" defer src="/assets/js/qwizzy-account-deletion.mjs"></script>
 <style>:root { --accent: var(--qwizzy); --accent-dim: rgba(118,87,255,.16); }</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <header class="site-head">
   <div class="shell head-inner">
     <a class="brand" href="/" aria-label="Generis Data Base — home">
@@ -34,7 +35,7 @@
   </div>
 </header>
 
-<main>
+<main id="main-content">
   <section class="page-hero deletion-hero">
     <div class="shell deletion-shell">
       <div class="stack" data-reveal>
@@ -77,7 +78,7 @@
             </div>
           </div>
 
-          <div class="deletion-step deletion-success" id="success-step" hidden>
+          <div class="deletion-step deletion-success" id="success-step" tabindex="-1" hidden>
             <span class="deletion-step-number">✓</span>
             <div><h2>Account deleted</h2><p>Your Qwizzy Online account and account-linked server data have been permanently removed. De-linked purchase-verification records may be retained as described in the privacy policy. You may now close this page.</p></div>
           </div>
