@@ -11,6 +11,7 @@
 <script>document.documentElement.dataset.theme = localStorage.getItem("gdb-theme") || "dark";</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <script defer src="/assets/js/fx.js"></script>
+<script type="module" src="/assets/js/privacy-translations.mjs"></script>
 <style>
   .legal { max-width: 74ch; }
   .legal h2 { font-size: 1.25rem; font-family: var(--font-ui); font-weight: 650; margin: 38px 0 12px; }
@@ -49,13 +50,14 @@
   </div>
 </header>
 
-<main id="main-content">
+<main id="main-content" data-privacy-document="site" data-i18n-keep-english lang="en">
   <section class="page-hero" style="padding-bottom:20px">
     <div class="shell stack" style="--gap:14px">
       <p class="eyebrow">Data protection</p>
       <h1 class="h-lg">Privacy</h1>
       <p class="lede">The short version: no analytics, no advertising, no tracking cookies. The only data stored is
         what you type into a form yourself.</p>
+      <p class="language-disclosure">The English text is the source version. Translations are provided for clarity.</p>
     </div>
   </section>
 

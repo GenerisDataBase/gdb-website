@@ -3,7 +3,7 @@ const LANGS = ["en", "de", "es", "it"];
 const LABELS = { en: "EN", de: "DE", es: "ES", it: "IT" };
 const LANGUAGE_NAMES = { en: "English", de: "Deutsch", es: "Español", it: "Italiano" };
 const FLAGS = { en: "🇬🇧", de: "🇩🇪", es: "🇪🇸", it: "🇮🇹" };
-const ENGLISH_ONLY_PAGES = /\/(imprint|privacy|qwizzy-account-deletion|admin|setup)(?:\.html)?\/?$/;
+const ENGLISH_ONLY_PAGES = /\/(imprint|qwizzy-account-deletion|admin|setup)(?:\.html)?\/?$/;
 
 // Keep the document metadata in the same language as the visible page. The
 // English strings in the HTML remain the no-JavaScript and crawler fallback.
@@ -37,6 +37,12 @@ const PAGE_META = {
     de: ["Kontakt — Generis Data Base", "Sende eine Nachricht an Generis Data Base — für Fehlermeldungen, Funktionswünsche, Beta-Zugang oder einfach ein Hallo.", "Kontakt — Generis Data Base", "Schreib uns. Du erhältst eine Antwort von der Person, die den Code geschrieben hat."],
     es: ["Contacto — Generis Data Base", "Envía un mensaje a Generis Data Base: errores, sugerencias, acceso beta o simplemente un saludo.", "Contacto — Generis Data Base", "Escríbenos. Responde la persona que escribió el código."],
     it: ["Contatti — Generis Data Base", "Invia un messaggio a Generis Data Base: errori, richieste, accesso beta o anche solo un saluto.", "Contatti — Generis Data Base", "Scrivici. Risponde la persona che ha scritto il codice."],
+  },
+  "/privacy": {
+    en: ["Privacy — Generis Data Base", "What data this website stores, why, and for how long."],
+    de: ["Datenschutz — Generis Data Base", "Welche Daten diese Website speichert, warum und für wie lange."],
+    es: ["Privacidad — Generis Data Base", "Qué datos almacena este sitio web, por qué y durante cuánto tiempo."],
+    it: ["Privacy — Generis Data Base", "Quali dati conserva questo sito web, perché e per quanto tempo."],
   },
 };
 const rows = {
@@ -370,8 +376,6 @@ if (englishOnlyPage) {
   document.querySelector("main")?.setAttribute("lang", "en");
   applyLanguage("en");
 } else {
-  document.querySelector("#privacy")?.setAttribute("data-i18n-keep-english", "");
-  document.querySelector("#privacy")?.setAttribute("lang", "en");
   document.querySelector("#account-deletion")?.setAttribute("data-i18n-keep-english", "");
   document.querySelector("#account-deletion")?.setAttribute("lang", "en");
   addSelector();
