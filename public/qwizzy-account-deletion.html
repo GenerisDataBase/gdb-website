@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Delete your Qwizzy Online account | Generis Data Base</title>
-<meta name="description" content="Securely request deletion of your Qwizzy Online account and associated server data.">
+<meta name="description" content="Securely request deletion of your Qwizzy Online account and account-linked server data.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://generisdatabase.com/qwizzy-account-deletion">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -40,7 +40,7 @@
       <div class="stack" data-reveal>
         <p class="eyebrow">Qwizzy privacy control</p>
         <h1 class="h-xl">Delete your Online account.</h1>
-        <p class="lede">This permanently removes your anonymous Qwizzy Online account and its associated server data. Offline scores and settings stored only on your device are not affected.</p>
+        <p class="lede">This permanently removes your anonymous Qwizzy Online account and account-linked server data. Offline scores and settings stored only on your device are not affected. De-linked purchase-verification records may be retained as described in the Qwizzy privacy policy.</p>
       </div>
 
       <div class="deletion-layout">
@@ -69,7 +69,7 @@
                 <input id="verification-code" name="verificationCode" class="deletion-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456" required>
                 <label class="deletion-confirm">
                   <input id="permanent-confirm" type="checkbox" required>
-                  <span>I understand that my Qwizzy Online account and associated server data will be permanently deleted.</span>
+                  <span>I understand that my Qwizzy Online account and account-linked server data will be permanently deleted.</span>
                 </label>
                 <button class="btn deletion-danger" type="submit">Permanently delete account</button>
                 <button class="deletion-text-button" id="restart-request" type="button">Use a different friend code</button>
@@ -79,7 +79,7 @@
 
           <div class="deletion-step deletion-success" id="success-step" hidden>
             <span class="deletion-step-number">✓</span>
-            <div><h2>Account deleted</h2><p>Your Qwizzy Online account and associated server data have been permanently removed. You may now close this page.</p></div>
+            <div><h2>Account deleted</h2><p>Your Qwizzy Online account and account-linked server data have been permanently removed. De-linked purchase-verification records may be retained as described in the privacy policy. You may now close this page.</p></div>
           </div>
 
           <p class="form-status" id="deletion-status" role="status" aria-live="polite"></p>
@@ -88,7 +88,7 @@
         <aside class="deletion-aside" data-reveal data-d="100">
           <div class="privacy-item">
             <h3>What is deleted?</h3>
-            <p>Your anonymous Online account, profile, friend code, online matches, leaderboard data, invitations, reports, push tokens and submitted-question records linked to that account.</p>
+            <p>Your anonymous Online account and account-linked profile, friend code, online matches, leaderboard data, invitations, reports, push tokens, badges and submitted-question records. De-linked purchase-verification records may be retained as described in the <a href="/qwizzy#privacy" style="color:var(--accent)">Qwizzy privacy policy</a>.</p>
           </div>
           <div class="privacy-item">
             <h3>No longer have the app?</h3>
@@ -105,7 +105,7 @@
 <footer class="site-foot">
   <div class="shell">
     <div class="foot-grid">
-      <div><a class="brand" href="/" style="margin-bottom:14px"><img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png" src="/assets/img/crest-white-sm.png" alt="" width="34" height="37"><span class="brand-text"><span class="brand-name">Generis Data Base</span><span class="brand-sub">App Studio</span></span></a><p style="color:var(--muted);font-size:.88rem;max-width:34ch">Independent software studio building focused apps for macOS, iOS and Android.</p></div>
+      <div><a class="brand" href="/" style="margin-bottom:14px"><img data-crest data-dark="/assets/img/crest-white-sm.png" data-light="/assets/img/crest-black-sm.png" src="/assets/img/crest-white-sm.png" alt="" width="34" height="37"><span class="brand-text"><span class="brand-name">Generis Data Base</span><span class="brand-sub">App Studio</span></span></a><p style="color:var(--muted);font-size:.88rem;max-width:34ch">Independent studio behind Qwizzy for iOS and Android.</p></div>
       <div><h5>Qwizzy</h5><a href="/qwizzy">Product page</a><a href="/qwizzy#privacy">Privacy policy</a><a href="/qwizzy-account-deletion">Account deletion</a></div>
       <div><h5>Studio</h5><a href="/contact">Contact</a><a href="/imprint">Imprint</a><a href="/privacy">Privacy</a></div>
     </div>

@@ -3,20 +3,78 @@ const LANGS = ["en", "de", "es", "it"];
 const LABELS = { en: "EN", de: "DE", es: "ES", it: "IT" };
 const LANGUAGE_NAMES = { en: "English", de: "Deutsch", es: "Español", it: "Italiano" };
 const FLAGS = { en: "🇬🇧", de: "🇩🇪", es: "🇪🇸", it: "🇮🇹" };
+const ENGLISH_ONLY_PAGES = /\/(imprint|privacy|qwizzy-account-deletion|admin|setup)(?:\.html)?\/?$/;
+
+// Keep the document metadata in the same language as the visible page. The
+// English strings in the HTML remain the no-JavaScript and crawler fallback.
+const PAGE_META = {
+  "/": {
+    en: ["Generis Data Base — the independent studio behind Qwizzy", "Generis Data Base (GDB) is the independent studio behind Qwizzy, a curated quiz app for iOS and Android.", "Generis Data Base — the studio behind Qwizzy", "Meet Qwizzy: curated questions, flexible game modes and 1,000 achievement badges."],
+    de: ["Generis Data Base — das unabhängige Studio hinter Qwizzy", "Generis Data Base (GDB) ist das unabhängige Studio hinter Qwizzy, einer kuratierten Quiz-App für iOS und Android.", "Generis Data Base — das Studio hinter Qwizzy", "Entdecke Qwizzy: kuratierte Fragen, flexible Spielmodi und 1.000 Erfolgsabzeichen."],
+    es: ["Generis Data Base — el estudio independiente detrás de Qwizzy", "Generis Data Base (GDB) es el estudio independiente detrás de Qwizzy, una app de preguntas seleccionadas para iOS y Android.", "Generis Data Base — el estudio detrás de Qwizzy", "Descubre Qwizzy: preguntas seleccionadas, modos flexibles y 1.000 insignias de logros."],
+    it: ["Generis Data Base — lo studio indipendente dietro Qwizzy", "Generis Data Base (GDB) è lo studio indipendente dietro Qwizzy, un'app quiz curata per iOS e Android.", "Generis Data Base — lo studio dietro Qwizzy", "Scopri Qwizzy: domande curate, modalità flessibili e 1.000 badge traguardo."],
+  },
+  "/products": {
+    en: ["Qwizzy — the product by Generis Data Base", "Discover Qwizzy, the quiz app with 14,500+ curated questions and 1,000 permanent achievement badges.", "Qwizzy — Generis Data Base", "14,500+ curated questions, seven ways to play and 1,000 permanent achievement badges."],
+    de: ["Qwizzy — das Produkt von Generis Data Base", "Entdecke Qwizzy, die Quiz-App mit über 14.500 kuratierten Fragen und 1.000 dauerhaften Erfolgsabzeichen.", "Qwizzy — Generis Data Base", "Über 14.500 kuratierte Fragen, sieben Spielmöglichkeiten und 1.000 dauerhafte Erfolgsabzeichen."],
+    es: ["Qwizzy — el producto de Generis Data Base", "Descubre Qwizzy, la app con más de 14.500 preguntas seleccionadas y 1.000 insignias de logros permanentes.", "Qwizzy — Generis Data Base", "Más de 14.500 preguntas seleccionadas, siete formas de jugar y 1.000 insignias de logros permanentes."],
+    it: ["Qwizzy — il prodotto di Generis Data Base", "Scopri Qwizzy, l'app con oltre 14.500 domande curate e 1.000 badge traguardo permanenti.", "Qwizzy — Generis Data Base", "Oltre 14.500 domande curate, sette modi di giocare e 1.000 badge traguardo permanenti."],
+  },
+  "/qwizzy": {
+    en: ["Qwizzy — 14,500+ quiz questions for iOS & Android | Generis Data Base", "Qwizzy is a multiple-choice quiz app with 14,500+ curated questions across 25 categories, five difficulty levels and 33 language variants.", "Qwizzy — quiz app by Generis Data Base", "14,500+ curated questions across 25 categories and 33 language variants."],
+    de: ["Qwizzy — über 14.500 Quizfragen für iOS & Android | Generis Data Base", "Qwizzy ist eine Multiple-Choice-Quiz-App mit über 14.500 kuratierten Fragen in 25 Kategorien, fünf Schwierigkeitsstufen und 33 Sprachvarianten.", "Qwizzy — Quiz-App von Generis Data Base", "Über 14.500 kuratierte Fragen in 25 Kategorien und 33 Sprachvarianten."],
+    es: ["Qwizzy — más de 14.500 preguntas para iOS y Android | Generis Data Base", "Qwizzy es una app con más de 14.500 preguntas seleccionadas, 25 categorías, cinco niveles de dificultad y 33 variantes de idioma.", "Qwizzy — app de preguntas de Generis Data Base", "Más de 14.500 preguntas seleccionadas en 25 categorías y 33 variantes de idioma."],
+    it: ["Qwizzy — oltre 14.500 domande per iOS e Android | Generis Data Base", "Qwizzy è un'app quiz con oltre 14.500 domande curate, 25 categorie, cinque livelli di difficoltà e 33 varianti linguistiche.", "Qwizzy — app quiz di Generis Data Base", "Oltre 14.500 domande curate in 25 categorie e 33 varianti linguistiche."],
+  },
+  "/qwizzy-badges": {
+    en: ["1,000 Qwizzy achievement badges | Generis Data Base", "Explore the exact 1,000 permanent achievement badges in Qwizzy across 11 progress categories and keep a private checklist on this device.", "1,000 Qwizzy achievement badges", "The permanent Qwizzy achievement catalogue in one interactive checklist."],
+    de: ["1.000 Qwizzy-Erfolgsabzeichen | Generis Data Base", "Entdecke die exakt 1.000 dauerhaften Erfolgsabzeichen aus Qwizzy in 11 Fortschrittskategorien und führe eine private Checkliste auf diesem Gerät.", "1.000 Qwizzy-Erfolgsabzeichen", "Der dauerhafte Qwizzy-Erfolgskatalog als interaktive Checkliste."],
+    es: ["1.000 insignias de logros de Qwizzy | Generis Data Base", "Explora las 1.000 insignias de logros permanentes exactas de Qwizzy en 11 categorías de progreso y guarda una lista privada en este dispositivo.", "1.000 insignias de logros de Qwizzy", "El catálogo permanente de logros de Qwizzy en una lista interactiva."],
+    it: ["1.000 badge traguardo di Qwizzy | Generis Data Base", "Scopri i 1.000 badge traguardo permanenti esatti di Qwizzy in 11 categorie di progresso e conserva una checklist privata sul dispositivo.", "1.000 badge traguardo di Qwizzy", "Il catalogo permanente dei traguardi Qwizzy in una checklist interattiva."],
+  },
+  "/contact": {
+    en: ["Contact — Generis Data Base", "Send a message to Generis Data Base. Bug reports, feature requests, beta access or just a hello.", "Contact — Generis Data Base", "Write in. You get a reply from the person who wrote the code."],
+    de: ["Kontakt — Generis Data Base", "Sende eine Nachricht an Generis Data Base — für Fehlermeldungen, Funktionswünsche, Beta-Zugang oder einfach ein Hallo.", "Kontakt — Generis Data Base", "Schreib uns. Du erhältst eine Antwort von der Person, die den Code geschrieben hat."],
+    es: ["Contacto — Generis Data Base", "Envía un mensaje a Generis Data Base: errores, sugerencias, acceso beta o simplemente un saludo.", "Contacto — Generis Data Base", "Escríbenos. Responde la persona que escribió el código."],
+    it: ["Contatti — Generis Data Base", "Invia un messaggio a Generis Data Base: errori, richieste, accesso beta o anche solo un saluto.", "Contatti — Generis Data Base", "Scrivici. Risponde la persona che ha scritto il codice."],
+  },
+};
 const rows = {
   "Home": ["Startseite", "Inicio", "Home"],
   "Products": ["Produkte", "Productos", "Prodotti"],
   "Contact": ["Kontakt", "Contacto", "Contatti"],
   "App Studio": ["App-Studio", "Estudio de apps", "Studio di app"],
+  "Product": ["Produkt", "Producto", "Prodotto"],
+  "Our product": ["Unser Produkt", "Nuestro producto", "Il nostro prodotto"],
+  "1,000 challenges": ["1.000 Herausforderungen", "1.000 desafíos", "1.000 sfide"],
+  "1,000": ["1.000", "1.000", "1.000"],
+  "2,500": ["2.500", "2.500", "2.500"],
+  "Every answer can unlock something.": ["Jede Antwort kann etwas freischalten.", "Cada respuesta puede desbloquear algo.", "Ogni risposta può sbloccare qualcosa."],
+  "Qwizzy includes exactly 1,000 permanent achievement badges across 11 progress categories — from a first submitted question to long-term goals. Browse the achievement catalogue, filter it and keep a private checklist in your browser.": ["Qwizzy enthält exakt 1.000 dauerhafte Erfolgsabzeichen in 11 Fortschrittskategorien – von der ersten eingereichten Frage bis zu Langzeitzielen. Durchsuche den Erfolgskatalog, filtere ihn und führe eine private Checkliste in deinem Browser.", "Qwizzy incluye exactamente 1.000 insignias de logros permanentes en 11 categorías de progreso, desde la primera pregunta enviada hasta objetivos a largo plazo. Explora y filtra el catálogo y guarda una lista privada en tu navegador.", "Qwizzy include esattamente 1.000 badge traguardo permanenti in 11 categorie di progresso, dalla prima domanda inviata agli obiettivi a lungo termine. Esplora e filtra il catalogo e conserva una checklist privata nel browser."],
+  "From first steps to long-term goals: Qwizzy includes exactly 1,000 permanent achievement badges across 11 progress categories, matching the catalogue used in the app.": ["Von den ersten Schritten bis zu Langzeitzielen: Qwizzy enthält exakt 1.000 dauerhafte Erfolgsabzeichen in 11 Fortschrittskategorien – identisch mit dem Katalog in der App.", "Desde los primeros pasos hasta los objetivos a largo plazo: Qwizzy incluye exactamente 1.000 insignias de logros permanentes en 11 categorías de progreso, iguales al catálogo de la app.", "Dai primi passi agli obiettivi a lungo termine: Qwizzy include esattamente 1.000 badge traguardo permanenti in 11 categorie di progresso, come nel catalogo dell'app."],
+  "permanent badges": ["dauerhafte Abzeichen", "insignias permanentes", "badge permanenti"],
+  "challenge categories": ["Herausforderungskategorien", "categorías de desafíos", "categorie di sfide"],
+  "difficulty levels": ["Schwierigkeitsstufen", "niveles de dificultad", "livelli di difficoltà"],
+  "highest milestone": ["höchster Meilenstein", "hito máximo", "traguardo massimo"],
+  "Discover all 1,000 badges": ["Alle 1.000 Abzeichen entdecken", "Descubrir las 1.000 insignias", "Scopri tutti i 1.000 badge"],
+  "Discover the complete collection": ["Die komplette Sammlung entdecken", "Descubrir la colección completa", "Scopri la collezione completa"],
+  "Example Qwizzy badges": ["Beispiele für Qwizzy-Abzeichen", "Ejemplos de insignias de Qwizzy", "Esempi di badge Qwizzy"],
+  "Keep it going.": ["Bleib dran.", "Sigue así.", "Continua così."],
+  "Daily streak": ["Tägliche Serie", "Racha diaria", "Serie giornaliera"],
+  "No room for mistakes.": ["Kein Platz für Fehler.", "No hay margen para errores.", "Niente spazio per gli errori."],
+  "Built for the long run.": ["Für die lange Strecke gemacht.", "Hecho para largo plazo.", "Pensato per durare."],
+  "Player level": ["Spielerlevel", "Nivel de jugador", "Livello giocatore"],
   "Independent app studio": ["Unabhängiges App-Studio", "Estudio de apps independiente", "Studio di app indipendente"],
-  "Apps worth trying.": ["Apps, die einen Versuch wert sind.", "Apps que vale la pena probar.", "App che vale la pena provare."],
   "Generis Data Base is a one-person studio shipping small, sharp software for macOS, iOS and Android. No bloat, no accounts you didn't ask for — just tools that open fast and do one thing properly.": ["Generis Data Base ist ein Ein-Personen-Studio für kleine, durchdachte Software auf macOS, iOS und Android. Kein Ballast, keine unerwünschten Konten – nur Werkzeuge, die schnell starten und eine Aufgabe richtig erledigen.", "Generis Data Base es un estudio unipersonal que crea software pequeño y preciso para macOS, iOS y Android. Sin funciones innecesarias ni cuentas no solicitadas: solo herramientas rápidas que hacen bien una cosa.", "Generis Data Base è uno studio indipendente che crea software piccolo e mirato per macOS, iOS e Android. Niente funzioni superflue né account indesiderati: solo strumenti veloci che fanno bene una cosa."],
   "Get in touch": ["Kontakt aufnehmen", "Contactar", "Contattaci"],
   "Explore 1,000 badges": ["1.000 Abzeichen entdecken", "Descubrir 1.000 insignias", "Scopri 1.000 badge"],
   "Independent software studio building focused apps for macOS, iOS and Android.": ["Unabhängiges Softwarestudio für fokussierte Apps auf macOS, iOS und Android.", "Estudio de software independiente que crea apps especializadas para macOS, iOS y Android.", "Studio software indipendente che crea app mirate per macOS, iOS e Android."],
+  "Independent studio behind Qwizzy for iOS and Android.": ["Unabhängiges Studio hinter Qwizzy für iOS und Android.", "Estudio independiente detrás de Qwizzy para iOS y Android.", "Studio indipendente dietro Qwizzy per iOS e Android."],
+  "1,000 Qwizzy badges": ["1.000 Qwizzy-Abzeichen", "1.000 insignias de Qwizzy", "1.000 badge Qwizzy"],
   "Studio": ["Studio", "Estudio", "Studio"],
   "Imprint": ["Impressum", "Aviso legal", "Note legali"],
   "Privacy": ["Datenschutz", "Privacidad", "Privacy"],
+  "Qwizzy privacy": ["Qwizzy-Datenschutz", "Privacidad de Qwizzy", "Privacy di Qwizzy"],
   "Made in Germany ·": ["Entwickelt in Deutschland ·", "Hecho en Alemania ·", "Realizzato in Germania ·"],
   "Legal notice": ["Rechtliche Hinweise", "Aviso legal", "Note legali"],
   "The catalogue": ["Der Katalog", "El catálogo", "Il catalogo"],
@@ -24,16 +82,15 @@ const rows = {
   "In development · macOS": ["In Entwicklung · macOS", "En desarrollo · macOS", "In sviluppo · macOS"],
   "In development · iOS & Android": ["In Entwicklung · iOS & Android", "En desarrollo · iOS y Android", "In sviluppo · iOS e Android"],
   "Available for macOS": ["Für macOS verfügbar", "Disponible para macOS", "Disponibile per macOS"],
-  "A multiple-choice quiz app for iOS and Android with a library of roughly": ["Eine Multiple-Choice-Quiz-App für iOS und Android mit einer Bibliothek von rund", "Una app de preguntas para iOS y Android con una biblioteca de unas", "Un'app quiz per iOS e Android con una raccolta di circa"],
-  "15,000 questions": ["15.000 Fragen", "15.000 preguntas", "15.000 domande"],
-  "spread across 25 categories and five difficulty levels. Every question is written and checked by hand — no scraped trivia dumps.": ["in 25 Kategorien und fünf Schwierigkeitsstufen. Jede Frage wird von Hand geschrieben und geprüft – keine automatisch gesammelten Fragensammlungen.", "repartidas en 25 categorías y cinco niveles de dificultad. Cada pregunta está escrita y revisada a mano, sin recopilaciones automáticas.", "suddivise in 25 categorie e cinque livelli di difficoltà. Ogni domanda è scritta e verificata a mano, senza raccolte automatiche."],
-  "◆ 15,000+ hand-written questions": ["◆ Über 15.000 handgeschriebene Fragen", "◆ Más de 15.000 preguntas escritas a mano", "◆ Oltre 15.000 domande scritte a mano"],
+  "A multiple-choice quiz app for iOS and Android with more than": ["Eine Multiple-Choice-Quiz-App für iOS und Android mit mehr als", "Una app de preguntas para iOS y Android con más de", "Un'app quiz per iOS e Android con oltre"],
+  "14,500 curated and reviewed questions": ["14.500 kuratierten und geprüften Fragen", "14.500 preguntas seleccionadas y revisadas", "14.500 domande curate e revisionate"],
+  "across 25 categories, five difficulty levels and 33 language variants. The full library ships with the app for offline play.": ["in 25 Kategorien, fünf Schwierigkeitsstufen und 33 Sprachvarianten. Die vollständige Bibliothek ist für das Offline-Spiel in der App enthalten.", "en 25 categorías, cinco niveles de dificultad y 33 variantes de idioma. La biblioteca completa está incluida en la app para jugar sin conexión.", "in 25 categorie, cinque livelli di difficoltà e 33 varianti linguistiche. L'intera raccolta è inclusa nell'app per giocare offline."],
+  "◆ 14,500+ curated and reviewed questions": ["◆ Über 14.500 kuratierte und geprüfte Fragen", "◆ Más de 14.500 preguntas seleccionadas y revisadas", "◆ Oltre 14.500 domande curate e revisionate"],
   "◆ 25 categories, from geography to internet culture": ["◆ 25 Kategorien, von Geografie bis Internetkultur", "◆ 25 categorías, de geografía a cultura de internet", "◆ 25 categorie, dalla geografia alla cultura di internet"],
   "◆ Five difficulty levels, so it stays fair": ["◆ Fünf Schwierigkeitsstufen für faire Runden", "◆ Cinco niveles de dificultad para partidas equilibradas", "◆ Cinque livelli di difficoltà per partite equilibrate"],
+  "◆ 33 language variants": ["◆ 33 Sprachvarianten", "◆ 33 variantes de idioma", "◆ 33 varianti linguistiche"],
   "◆ Works offline — the whole library ships with the app": ["◆ Funktioniert offline – die gesamte Bibliothek ist in der App", "◆ Funciona sin conexión: toda la biblioteca viene con la app", "◆ Funziona offline: l'intera raccolta è inclusa nell'app"],
   "Explore Qwizzy": ["Qwizzy entdecken", "Descubrir Qwizzy", "Scopri Qwizzy"],
-  "Explore Wiksy": ["Wiksy entdecken", "Descubrir Wiksy", "Scopri Wiksy"],
-  "Explore BarLingo": ["BarLingo entdecken", "Descubrir BarLingo", "Scopri BarLingo"],
   "Wikipedia without the detour. Hit a global shortcut anywhere in macOS, type a name or a topic, and the article opens in its own floating window — readable, with quick actions to copy a section or open it in your browser.": ["Wikipedia ohne Umweg. Drücke überall in macOS eine globale Tastenkombination, gib einen Namen oder ein Thema ein und der Artikel öffnet sich in einem eigenen schwebenden Fenster – gut lesbar und mit Schnellaktionen zum Kopieren oder Öffnen im Browser.", "Wikipedia sin rodeos. Pulsa un atajo global desde cualquier lugar de macOS, escribe un nombre o tema y el artículo se abre en su propia ventana flotante, con acciones rápidas para copiar una sección o abrirla en el navegador.", "Wikipedia senza deviazioni. Premi una scorciatoia globale ovunque in macOS, digita un nome o un argomento e l'articolo si apre in una finestra mobile, con azioni rapide per copiare una sezione o aprirla nel browser."],
   "◆ Global hotkey from any app": ["◆ Globale Tastenkombination aus jeder App", "◆ Atajo global desde cualquier app", "◆ Scorciatoia globale da qualsiasi app"],
   "◆ Each article opens in its own window": ["◆ Jeder Artikel öffnet sich in einem eigenen Fenster", "◆ Cada artículo se abre en su propia ventana", "◆ Ogni articolo si apre in una finestra separata"],
@@ -100,18 +157,28 @@ const rows = {
   "Your keyboard, your way": ["Deine Tastatur, deine Regeln", "Tu teclado, a tu manera", "La tua tastiera, a modo tuo"],
   "Accessible throughout": ["Durchgehend barrierefrei", "Accesible en todo momento", "Accessibile ovunque"],
   "No account. No profiling.": ["Kein Konto. Keine Profilbildung.", "Sin cuenta. Sin perfiles.", "Nessun account. Nessuna profilazione."],
-  "A multiple-choice quiz app with a hand-written question library, sorted into 25 categories and five difficulty levels — so the difficulty rating actually means something.": ["Eine Multiple-Choice-Quiz-App mit handgeschriebenen Fragen in 25 Kategorien und fünf Schwierigkeitsstufen – damit die Schwierigkeitsangabe wirklich etwas bedeutet.", "Una app de preguntas con una biblioteca escrita a mano, organizada en 25 categorías y cinco niveles de dificultad para que la valoración sea realmente útil.", "Un'app quiz con domande scritte a mano, organizzate in 25 categorie e cinque livelli di difficoltà, così la valutazione ha davvero senso."],
+  "A multiple-choice quiz app with more than 14,500 curated and reviewed questions, organised into 25 categories, five difficulty levels and 33 language variants.": ["Eine Multiple-Choice-Quiz-App mit mehr als 14.500 kuratierten und geprüften Fragen in 25 Kategorien, fünf Schwierigkeitsstufen und 33 Sprachvarianten.", "Una app con más de 14.500 preguntas seleccionadas y revisadas, organizadas en 25 categorías, cinco niveles de dificultad y 33 variantes de idioma.", "Un'app quiz con oltre 14.500 domande curate e revisionate, organizzate in 25 categorie, cinque livelli di difficoltà e 33 varianti linguistiche."],
   "Built for every kind of quiz night": ["Für jeden Quizabend gemacht", "Para todo tipo de noche de preguntas", "Per ogni tipo di serata quiz"],
   "One question library. Many ways to play.": ["Eine Fragenbibliothek. Viele Spielmöglichkeiten.", "Una biblioteca. Muchas formas de jugar.", "Una raccolta. Tanti modi di giocare."],
-  "Five game modes": ["Fünf Spielmodi", "Cinco modos de juego", "Cinque modalità di gioco"],
-  "Pick the mood.": ["Wähle die passende Stimmung.", "Elige el ambiente.", "Scegli l'atmosfera."],
-  "Play anywhere": ["Überall spielen", "Juega en cualquier lugar", "Gioca ovunque"],
-  "Challenge a friend.": ["Fordere jemanden heraus.", "Desafía a un amigo.", "Sfida un amico."],
-  "Your quiz. Your look.": ["Dein Quiz. Dein Stil.", "Tu quiz. Tu estilo.", "Il tuo quiz. Il tuo stile."],
+  "Seven ways to play": ["Sieben Spielmöglichkeiten", "Siete formas de jugar", "Sette modi di giocare"],
+  "Pick your challenge.": ["Wähle deine Herausforderung.", "Elige tu desafío.", "Scegli la tua sfida."],
+  "Play Classic, Sudden Death, 3 Hearts, local or online duels, Last Man Standing and Moderator mode.": ["Spiele Classic, Sudden Death, 3 Hearts, lokale oder Online-Duelle, Last Man Standing und den Moderatormodus.", "Juega a Classic, Sudden Death, 3 Hearts, duelos locales o en línea, Last Man Standing y el modo Moderador.", "Gioca a Classic, Sudden Death, 3 Hearts, duelli locali o online, Last Man Standing e modalità Moderatore."],
+  "Timed rounds": ["Runden auf Zeit", "Rondas contrarreloj", "Round a tempo"],
+  "Think fast. Score big.": ["Schnell denken. Groß punkten.", "Piensa rápido. Consigue muchos puntos.", "Pensa in fretta. Fai tanti punti."],
+  "Questions span every topic, while the timer and lifelines keep each round moving.": ["Die Fragen decken jedes Thema ab, während Timer und Joker jede Runde in Bewegung halten.", "Las preguntas abarcan todos los temas, mientras el temporizador y los comodines mantienen el ritmo de cada ronda.", "Le domande spaziano tra tutti gli argomenti, mentre il timer e gli aiuti mantengono alto il ritmo di ogni round."],
+  "Sudden Death": ["Sudden Death", "Muerte súbita", "Sudden Death"],
+  "One mistake. Game over.": ["Ein Fehler. Spiel vorbei.", "Un error. Fin de la partida.", "Un errore. Partita finita."],
+  "Every answer counts in the most unforgiving solo mode. Stay sharp and chase a new high score.": ["Im härtesten Solomodus zählt jede Antwort. Bleib konzentriert und jage einen neuen Highscore.", "Cada respuesta cuenta en el modo individual más exigente. Mantente alerta y consigue una nueva puntuación récord.", "Ogni risposta conta nella modalità in solitaria più spietata. Resta concentrato e punta a un nuovo record."],
+  "Online Duel": ["Online-Duell", "Duelo en línea", "Duello online"],
+  "Challenge friends anywhere.": ["Fordere Freunde überall heraus.", "Desafía a tus amigos estés donde estés.", "Sfida gli amici ovunque."],
+  "Create a code, invite a friend or find a random opponent and play a round whenever it suits you.": ["Erstelle einen Code, lade einen Freund ein oder finde einen zufälligen Gegner und spiele eine Runde, wann immer es dir passt.", "Crea un código, invita a un amigo o encuentra un rival al azar y juega una ronda cuando quieras.", "Crea un codice, invita un amico o trova un avversario casuale e gioca un round quando vuoi."],
+  "Party mode": ["Partymodus", "Modo fiesta", "Modalità party"],
+  "Who will be the last standing?": ["Wer bleibt als Letzter übrig?", "¿Quién será el último en pie?", "Chi sarà l'ultimo a rimanere?"],
+  "Bring together two to ten players on one device and keep answering until only one remains.": ["Bringe zwei bis zehn Spieler an einem Gerät zusammen und beantwortet Fragen, bis nur noch einer übrig ist.", "Reúne de dos a diez jugadores en un dispositivo y seguid respondiendo hasta que solo quede uno.", "Riunisci da due a dieci giocatori su un dispositivo e continuate a rispondere finché ne rimane solo uno."],
   "Questions in the library": ["Fragen in der Bibliothek", "Preguntas en la biblioteca", "Domande nella raccolta"],
   "Categories": ["Kategorien", "Categorías", "Categorie"],
   "Difficulty levels": ["Schwierigkeitsstufen", "Niveles de dificultad", "Livelli di difficoltà"],
-  "Platforms at launch": ["Plattformen zum Start", "Plataformas en el lanzamiento", "Piattaforme al lancio"],
+  "Language variants": ["Sprachvarianten", "Variantes de idioma", "Varianti linguistiche"],
   "This page does not exist. It may have been moved or renamed.": ["Diese Seite existiert nicht. Möglicherweise wurde sie verschoben oder umbenannt.", "Esta página no existe. Puede que se haya movido o cambiado de nombre.", "Questa pagina non esiste. Potrebbe essere stata spostata o rinominata."],
   "Tell me what's on your mind…": ["Schreib mir, worum es geht …", "Cuéntame en qué estás pensando…", "Scrivi ciò che hai in mente…"],
   "Leave this empty": ["Dieses Feld leer lassen", "Deja este campo vacío", "Lascia vuoto questo campo"],
@@ -120,7 +187,6 @@ const rows = {
   "Choose language": ["Sprache auswählen", "Elegir idioma", "Scegli lingua"],
   "Generis Data Base — home": ["Generis Data Base – Startseite", "Generis Data Base — inicio", "Generis Data Base – home"],
 
-  "A configurable global hotkey opens Wiksy from inside any app — no need to switch to a browser first.": ["Eine frei wählbare globale Tastenkombination öffnet Wiksy aus jeder App heraus – ohne zuerst zum Browser wechseln zu müssen.", "Un atajo global configurable abre Wiksy desde cualquier aplicación, sin tener que cambiar primero al navegador.", "Una scorciatoia globale configurabile apre Wiksy da qualsiasi app, senza dover prima passare al browser."],
   "180+ Wikipedia languages": ["Über 180 Wikipedia-Sprachen", "Más de 180 idiomas de Wikipedia", "Oltre 180 lingue di Wikipedia"],
   "Choose the Wikipedia language you use. Search and article results follow that selection.": ["Wähle deine Wikipedia-Sprache. Suchergebnisse und Artikel folgen automatisch dieser Auswahl.", "Elige el idioma de Wikipedia que utilizas. Los resultados de búsqueda y los artículos seguirán esa selección.", "Scegli la lingua di Wikipedia che utilizzi. I risultati di ricerca e gli articoli seguiranno la selezione."],
   "Four windows or one": ["Vier Fenster oder eines", "Cuatro ventanas o una", "Quattro finestre o una"],
@@ -130,28 +196,23 @@ const rows = {
   "Four corners, or one large window.": ["Vier Ecken oder ein großes Fenster.", "Cuatro esquinas o una ventana grande.", "Quattro angoli oppure una finestra grande."],
   "Keep up to four articles open at once, each anchored to its own screen corner and closed independently. Prefer more room? Single large window mode reuses one generous reader for every new search.": ["Halte bis zu vier Artikel gleichzeitig offen, jeweils in einer eigenen Bildschirmecke und unabhängig schließbar. Du brauchst mehr Platz? Im Modus mit einem großen Fenster wird derselbe großzügige Reader für jede neue Suche verwendet.", "Mantén abiertos hasta cuatro artículos a la vez, cada uno anclado a una esquina y con cierre independiente. ¿Prefieres más espacio? El modo de ventana grande reutiliza un lector amplio para cada búsqueda nueva.", "Tieni aperti fino a quattro articoli, ciascuno ancorato a un angolo e chiudibile separatamente. Preferisci più spazio? La modalità a finestra grande riutilizza lo stesso ampio lettore per ogni nuova ricerca."],
   "Fits your screen and your workflow.": ["Passt zu deinem Bildschirm und deinem Arbeitsablauf.", "Se adapta a tu pantalla y a tu forma de trabajar.", "Si adatta allo schermo e al tuo flusso di lavoro."],
-  "Wiksy stays simple when you use it, but gives you control over how it appears and behaves.": ["Wiksy bleibt in der Bedienung einfach und gibt dir trotzdem Kontrolle über Aussehen und Verhalten.", "Wiksy sigue siendo sencillo de usar, pero te permite controlar su aspecto y comportamiento.", "Wiksy resta semplice da usare, ma ti lascia il controllo su aspetto e comportamento."],
   "Place it precisely": ["Präzise platzieren", "Colócala con precisión", "Posizionala con precisione"],
   "Use a preset — including placement beneath the MacBook notch — or set a custom position and size for the search panel and article windows.": ["Nutze eine Voreinstellung – auch direkt unter der MacBook-Notch – oder lege Position und Größe von Suchfeld und Artikelfenstern selbst fest.", "Usa una posición predefinida, incluida la ubicación bajo la muesca del MacBook, o configura la posición y el tamaño del buscador y las ventanas de artículos.", "Usa una posizione predefinita, anche sotto il notch del MacBook, oppure imposta posizione e dimensioni personalizzate per la ricerca e le finestre degli articoli."],
   "Choose the appearance": ["Darstellung wählen", "Elige la apariencia", "Scegli l'aspetto"],
   "Switch between standard and Liquid Glass styles, then tune transparency and glass intensity to suit your desktop.": ["Wechsle zwischen Standard- und Liquid-Glass-Stil und passe Transparenz und Glasintensität an deinen Desktop an.", "Cambia entre los estilos estándar y Liquid Glass y ajusta la transparencia y la intensidad del cristal a tu escritorio.", "Passa dallo stile standard a Liquid Glass e regola trasparenza e intensità del vetro in base al desktop."],
   "Choose the motion": ["Animation wählen", "Elige el movimiento", "Scegli il movimento"],
   "Select from eleven opening animations, randomise them on each launch and adjust their speed — or keep things restrained.": ["Wähle aus elf Öffnungsanimationen, lass sie bei jedem Start wechseln und passe die Geschwindigkeit an – oder halte alles ganz dezent.", "Elige entre once animaciones de apertura, altérnalas al iniciar y ajusta su velocidad, o mantén un estilo discreto.", "Scegli tra undici animazioni di apertura, rendile casuali a ogni avvio e regolane la velocità, oppure mantieni uno stile sobrio."],
-  "Trigger Wiksy from anywhere in macOS with one key combination — no window to find, no app to switch to first.": ["Starte Wiksy überall in macOS mit einer Tastenkombination – ohne ein Fenster suchen oder zuerst die App wechseln zu müssen.", "Activa Wiksy desde cualquier lugar de macOS con una combinación de teclas, sin buscar ventanas ni cambiar antes de aplicación.", "Avvia Wiksy ovunque in macOS con una combinazione di tasti, senza cercare finestre né cambiare prima applicazione."],
   "The floating search bar takes whatever you're looking for — a person, a place, an event.": ["Die schwebende Suchleiste findet, wonach du suchst – eine Person, einen Ort oder ein Ereignis.", "La barra de búsqueda flotante acepta cualquier consulta: una persona, un lugar o un acontecimiento.", "La barra di ricerca mobile accetta qualsiasi cosa tu stia cercando: una persona, un luogo o un evento."],
   "Read it, copy a section or the full article, open it in your browser, or close it — the next search uses the next free corner, or replaces the article when single large window mode is enabled.": ["Lies den Artikel, kopiere einen Abschnitt oder den ganzen Text, öffne ihn im Browser oder schließe ihn. Die nächste Suche nutzt die nächste freie Ecke oder ersetzt im großen Einzelmodus den aktuellen Artikel.", "Lee el artículo, copia una sección o el texto completo, ábrelo en el navegador o ciérralo. La siguiente búsqueda ocupará la próxima esquina libre o sustituirá el artículo en el modo de ventana grande.", "Leggi l'articolo, copia una sezione o il testo completo, aprilo nel browser oppure chiudilo. La ricerca successiva usa il prossimo angolo libero o sostituisce l'articolo nella modalità a finestra grande."],
-  "Wiksy sends your search term only to the public Wikipedia API for the language you selected. There are no analytics or advertising SDKs.": ["Wiksy sendet deinen Suchbegriff ausschließlich an die öffentliche Wikipedia-API der gewählten Sprache. Analyse- oder Werbe-SDKs gibt es nicht.", "Wiksy envía tu búsqueda únicamente a la API pública de Wikipedia del idioma elegido. No incluye SDK de análisis ni publicidad.", "Wiksy invia il termine cercato esclusivamente all'API pubblica di Wikipedia per la lingua scelta. Non include SDK di analisi o pubblicità."],
   "Article windows use a non-persistent web session.": ["Artikelfenster verwenden eine nicht dauerhafte Websitzung.", "Las ventanas de artículos usan una sesión web no persistente.", "Le finestre degli articoli usano una sessione web non persistente."],
   "Preferences remain locally on your Mac.": ["Einstellungen bleiben lokal auf deinem Mac.", "Las preferencias permanecen en tu Mac.", "Le preferenze restano sul Mac."],
   "Clipboard access is used only when you copy article text.": ["Auf die Zwischenablage wird nur beim Kopieren von Artikeltext zugegriffen.", "El portapapeles solo se utiliza cuando copias texto de un artículo.", "Gli appunti vengono usati solo quando copi il testo di un articolo."],
   "Global shortcuts require macOS Accessibility permission.": ["Globale Tastenkombinationen benötigen die Bedienungshilfen-Berechtigung von macOS.", "Los atajos globales requieren el permiso de Accesibilidad de macOS.", "Le scorciatoie globali richiedono il permesso Accessibilità di macOS."],
-  "BarLingo stays in the menu bar with no Dock icon by default. The configurable global shortcut opens a floating two-pane translator; swap languages, paste or type, then copy the result and return to your work.": ["BarLingo bleibt standardmäßig ohne Dock-Symbol in der Menüleiste. Die frei wählbare globale Tastenkombination öffnet einen schwebenden Übersetzer mit zwei Bereichen: Sprachen tauschen, Text einfügen oder eingeben, Ergebnis kopieren und weiterarbeiten.", "BarLingo permanece en la barra de menús y, por defecto, no muestra icono en el Dock. El atajo global configurable abre un traductor flotante con dos paneles: cambia los idiomas, pega o escribe, copia el resultado y vuelve al trabajo.", "BarLingo resta nella barra dei menu e, per impostazione predefinita, non mostra icone nel Dock. La scorciatoia globale configurabile apre un traduttore mobile a due pannelli: cambia le lingue, incolla o scrivi, copia il risultato e torna al lavoro."],
   "Use native macOS dictation for the source text and read either side aloud with independently selected voices. Keyboard shortcuts keep dictation, clearing, reading and copying within reach.": ["Nutze die native macOS-Diktierfunktion für den Ausgangstext und lass beide Seiten mit getrennt wählbaren Stimmen vorlesen. Tastenkürzel machen Diktieren, Löschen, Vorlesen und Kopieren jederzeit erreichbar.", "Usa el dictado nativo de macOS para el texto original y escucha ambos lados con voces elegidas por separado. Los atajos mantienen al alcance el dictado, borrado, lectura y copiado.", "Usa la dettatura nativa di macOS per il testo di partenza e ascolta entrambi i lati con voci selezionabili separatamente. Le scorciatoie rendono immediati dettatura, cancellazione, lettura e copia."],
   "Choose from 41 translation languages with right-to-left support and use the interface in 24 languages. Adjust position, size, transparency, glass intensity, colour scheme and opening animation — all without restarting.": ["Wähle aus 41 Übersetzungssprachen mit Rechts-nach-links-Unterstützung und nutze die Oberfläche in 24 Sprachen. Position, Größe, Transparenz, Glasintensität, Farbschema und Öffnungsanimation lassen sich ohne Neustart anpassen.", "Elige entre 41 idiomas de traducción, incluidos los de derecha a izquierda, y usa la interfaz en 24 idiomas. Ajusta posición, tamaño, transparencia, intensidad del cristal, colores y animación de apertura sin reiniciar.", "Scegli tra 41 lingue di traduzione, incluse quelle da destra a sinistra, e usa l'interfaccia in 24 lingue. Regola posizione, dimensioni, trasparenza, intensità del vetro, colori e animazione di apertura senza riavviare."],
   "No registration or API key. Google’s public translation endpoint is used first, with MyMemory as an automatic fallback.": ["Keine Registrierung und kein API-Schlüssel. Zuerst wird Googles öffentlicher Übersetzungsdienst verwendet, MyMemory dient automatisch als Ausweichlösung.", "Sin registro ni clave API. Primero se utiliza el servicio público de traducción de Google y MyMemory actúa como alternativa automática.", "Nessuna registrazione o chiave API. Viene usato prima il servizio pubblico di traduzione di Google, con MyMemory come alternativa automatica."],
   "Configure the show-and-hide shortcut and optionally switch to a chosen keyboard input source when the window opens.": ["Lege die Tastenkombination zum Ein- und Ausblenden fest und wechsle beim Öffnen des Fensters auf Wunsch automatisch zu einer ausgewählten Eingabequelle.", "Configura el atajo para mostrar y ocultar la ventana y, si quieres, cambia automáticamente a una fuente de entrada del teclado al abrirla.", "Configura la scorciatoia per mostrare e nascondere la finestra e, se vuoi, passa automaticamente a una sorgente di input della tastiera quando si apre."],
   "VoiceOver, keyboard navigation and localized spoken examples are supported across all 24 interface languages.": ["VoiceOver, Tastaturnavigation und lokalisierte gesprochene Beispiele werden in allen 24 Oberflächensprachen unterstützt.", "VoiceOver, la navegación por teclado y los ejemplos hablados localizados son compatibles con los 24 idiomas de la interfaz.", "VoiceOver, la navigazione da tastiera e gli esempi vocali localizzati sono supportati in tutte le 24 lingue dell'interfaccia."],
-  "BarLingo has no analytics or advertising SDKs and no remote backend of its own. Only the text being translated is sent to the translation provider over HTTPS.": ["BarLingo enthält weder Analyse- oder Werbe-SDKs noch ein eigenes externes Backend. Nur der zu übersetzende Text wird verschlüsselt per HTTPS an den Übersetzungsanbieter gesendet.", "BarLingo no incluye SDK de análisis o publicidad ni dispone de un servidor remoto propio. Solo el texto que se traduce se envía al proveedor mediante HTTPS.", "BarLingo non include SDK di analisi o pubblicità e non dispone di un backend remoto proprio. Solo il testo da tradurre viene inviato al fornitore tramite HTTPS."],
   "Local preferences remain on your Mac.": ["Lokale Einstellungen bleiben auf deinem Mac.", "Las preferencias locales permanecen en tu Mac.", "Le preferenze locali restano sul Mac."],
   "Microphone and speech recognition are used only for dictation.": ["Mikrofon und Spracherkennung werden nur zum Diktieren verwendet.", "El micrófono y el reconocimiento de voz solo se usan para el dictado.", "Microfono e riconoscimento vocale vengono usati solo per la dettatura."],
   "Clipboard access is limited to paste and copy actions.": ["Der Zugriff auf die Zwischenablage ist auf Einfügen und Kopieren beschränkt.", "El acceso al portapapeles se limita a pegar y copiar.", "L'accesso agli appunti è limitato alle azioni Incolla e Copia."],
@@ -164,9 +225,33 @@ const rows = {
 };
 
 const dictionaries = Object.fromEntries(LANGS.slice(1).map((lang, i) => [lang, Object.fromEntries(Object.entries(rows).map(([key, values]) => [key, values[i]]))]));
-const sensitivePage = /\/(imprint|privacy|qwizzy-account-deletion)(?:\.html)?\/?$/.test(location.pathname);
+const englishOnlyPage = ENGLISH_ONLY_PAGES.test(location.pathname);
 const originalText = new WeakMap();
 const originalAttrs = new WeakMap();
+
+function pagePath() {
+  const clean = location.pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "").replace(/\/$/, "");
+  return clean || "/";
+}
+
+function applyMetadata(lang) {
+  let meta = PAGE_META[pagePath()]?.[lang];
+  if (!meta && document.title.startsWith("Page not found")) {
+    const notFound = {
+      en: ["Page not found — Generis Data Base", "This page does not exist."],
+      de: ["Seite nicht gefunden — Generis Data Base", "Diese Seite existiert nicht."],
+      es: ["Página no encontrada — Generis Data Base", "Esta página no existe."],
+      it: ["Pagina non trovata — Generis Data Base", "Questa pagina non esiste."],
+    };
+    meta = notFound[lang];
+  }
+  if (!meta) return;
+  const [title, description, ogTitle = title, ogDescription = description] = meta;
+  document.title = title;
+  document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+  document.querySelector('meta[property="og:title"]')?.setAttribute("content", ogTitle);
+  document.querySelector('meta[property="og:description"]')?.setAttribute("content", ogDescription);
+}
 
 function translateNode(node, dict) {
   if (!originalText.has(node)) originalText.set(node, node.nodeValue);
@@ -204,7 +289,7 @@ function applyLanguage(lang) {
     if (!originalAttrs.has(el)) originalAttrs.set(el, Object.fromEntries(["placeholder","aria-label","title"].filter(a => el.hasAttribute(a)).map(a => [a, el.getAttribute(a)])));
     for (const [attr, source] of Object.entries(originalAttrs.get(el))) el.setAttribute(attr, dict[source] || source);
   });
-  if (!sensitivePage) document.title = dict[document.title] || document.title;
+  applyMetadata(lang);
   window.dispatchEvent(new CustomEvent("gdb-language-change", { detail: { language: lang } }));
 }
 
@@ -269,9 +354,18 @@ function addSelector() {
   });
 }
 
-// Legal/privacy and account-deletion content intentionally remains English.
-if (sensitivePage) document.querySelector("main")?.setAttribute("data-i18n-keep-english", "");
-document.querySelector("#privacy")?.setAttribute("data-i18n-keep-english", "");
-document.querySelector("#account-deletion")?.setAttribute("data-i18n-keep-english", "");
-addSelector();
-applyLanguage(preferredLanguage());
+// Legal and operational pages intentionally remain English. Do not show a
+// language choice that the page cannot honour, and expose the correct language
+// to browsers and assistive technology.
+if (englishOnlyPage) {
+  document.documentElement.lang = "en";
+  document.querySelector("main")?.setAttribute("lang", "en");
+  applyLanguage("en");
+} else {
+  document.querySelector("#privacy")?.setAttribute("data-i18n-keep-english", "");
+  document.querySelector("#privacy")?.setAttribute("lang", "en");
+  document.querySelector("#account-deletion")?.setAttribute("data-i18n-keep-english", "");
+  document.querySelector("#account-deletion")?.setAttribute("lang", "en");
+  addSelector();
+  applyLanguage(preferredLanguage());
+}
