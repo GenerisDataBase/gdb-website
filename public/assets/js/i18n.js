@@ -178,12 +178,20 @@ const rows = {
   "Seven ways to play": ["Sieben Spielmöglichkeiten", "Siete formas de jugar", "Sette modi di giocare"],
   "Pick your challenge.": ["Wähle deine Herausforderung.", "Elige tu desafío.", "Scegli la tua sfida."],
   "Play Classic, Sudden Death, 3 Hearts, local or online duels, Last Man Standing and Moderator mode.": ["Spiele Classic, Sudden Death, 3 Hearts, lokale oder Online-Duelle, Last Man Standing und den Moderatormodus.", "Juega a Classic, Sudden Death, 3 Hearts, duelos locales o en línea, Last Man Standing y el modo Moderador.", "Gioca a Classic, Sudden Death, 3 Hearts, duelli locali o online, Last Man Standing e modalità Moderatore."],
+  "3 Hearts": ["3 Herzen", "3 corazones", "3 cuori"],
+  "Play smart. Stay in the game.": ["Spiel clever. Bleib im Spiel.", "Juega con inteligencia. Sigue en la partida.", "Gioca d'astuzia. Resta in partita."],
+  "Three lives, a running timer and a 50:50 lifeline turn every answer into a tactical choice.": ["Drei Leben, ein laufender Timer und ein 50:50-Joker machen jede Antwort zu einer taktischen Entscheidung.", "Tres vidas, un temporizador en marcha y un comodín 50:50 convierten cada respuesta en una decisión táctica.", "Tre vite, un timer attivo e un aiuto 50:50 trasformano ogni risposta in una scelta tattica."],
+  "Your style": ["Dein Stil", "Tu estilo", "Il tuo stile"],
+  "Make every question your own.": ["Mach jede Frage zu deiner.", "Haz tuya cada pregunta.", "Rendi ogni domanda davvero tua."],
+  "Mix question and answer colors to create a quiz experience that feels unmistakably yours.": ["Kombiniere Farben für Fragen und Antworten und gestalte ein Quiz, das unverkennbar zu dir passt.", "Combina los colores de preguntas y respuestas para crear una experiencia de juego inconfundiblemente tuya.", "Combina i colori di domande e risposte per creare un'esperienza quiz inconfondibilmente tua."],
   "Timed rounds": ["Runden auf Zeit", "Rondas contrarreloj", "Round a tempo"],
   "Think fast. Score big.": ["Schnell denken. Groß punkten.", "Piensa rápido. Consigue muchos puntos.", "Pensa in fretta. Fai tanti punti."],
   "Questions span every topic, while the timer and lifelines keep each round moving.": ["Die Fragen decken jedes Thema ab, während Timer und Joker jede Runde in Bewegung halten.", "Las preguntas abarcan todos los temas, mientras el temporizador y los comodines mantienen el ritmo de cada ronda.", "Le domande spaziano tra tutti gli argomenti, mentre il timer e gli aiuti mantengono alto il ritmo di ogni round."],
   "Sudden Death": ["Sudden Death", "Muerte súbita", "Sudden Death"],
   "One mistake. Game over.": ["Ein Fehler. Spiel vorbei.", "Un error. Fin de la partida.", "Un errore. Partita finita."],
   "Every answer counts in the most unforgiving solo mode. Stay sharp and chase a new high score.": ["Im härtesten Solomodus zählt jede Antwort. Bleib konzentriert und jage einen neuen Highscore.", "Cada respuesta cuenta en el modo individual más exigente. Mantente alerta y consigue una nueva puntuación récord.", "Ogni risposta conta nella modalità in solitaria più spietata. Resta concentrato e punta a un nuovo record."],
+  "One life. Every second counts.": ["Ein Leben. Jede Sekunde zählt.", "Una vida. Cada segundo cuenta.", "Una vita. Ogni secondo conta."],
+  "Ten seconds, one answer and no room for mistakes. Stay sharp and chase a new high score.": ["Zehn Sekunden, eine Antwort und kein Platz für Fehler. Bleib konzentriert und jage einen neuen Highscore.", "Diez segundos, una respuesta y ningún margen de error. Mantente alerta y consigue una nueva puntuación récord.", "Dieci secondi, una risposta e nessun margine d'errore. Resta concentrato e punta a un nuovo record."],
   "Online Duel": ["Online-Duell", "Duelo en línea", "Duello online"],
   "Challenge friends anywhere.": ["Fordere Freunde überall heraus.", "Desafía a tus amigos estés donde estés.", "Sfida gli amici ovunque."],
   "Create a code, invite a friend or find a random opponent and play a round whenever it suits you.": ["Erstelle einen Code, lade einen Freund ein oder finde einen zufälligen Gegner und spiele eine Runde, wann immer es dir passt.", "Crea un código, invita a un amigo o encuentra un rival al azar y juega una ronda cuando quieras.", "Crea un codice, invita un amico o trova un avversario casuale e gioca un round quando vuoi."],
@@ -239,12 +247,15 @@ const rows = {
   "See the products": ["Produkte ansehen", "Ver los productos", "Scopri i prodotti"],
   "Skip to content": ["Zum Inhalt springen", "Saltar al contenido", "Vai al contenuto"],
   "Generis Data Base crest": ["Wappen von Generis Data Base", "Escudo de Generis Data Base", "Stemma di Generis Data Base"],
-  "Qwizzy overview showing its available quiz modes": ["Qwizzy-Übersicht mit den verfügbaren Spielmodi", "Vista general de Qwizzy con los modos de juego disponibles", "Panoramica di Qwizzy con le modalità di gioco disponibili"],
+  "Updated Qwizzy home screen showing its available quiz modes": ["Aktualisierter Qwizzy-Startbildschirm mit den verfügbaren Spielmodi", "Pantalla de inicio actualizada de Qwizzy con los modos de juego disponibles", "Schermata iniziale aggiornata di Qwizzy con le modalità di gioco disponibili"],
+  "A Qwizzy 3 Hearts round with timer and active 50:50 lifeline": ["Eine Qwizzy-Runde in 3 Herzen mit Timer und aktivem 50:50-Joker", "Una ronda de 3 corazones de Qwizzy con temporizador y comodín 50:50 activo", "Un round 3 cuori di Qwizzy con timer e aiuto 50:50 attivo"],
+  "A customized Qwizzy question screen with individually colored cards": ["Ein individuell gestalteter Qwizzy-Fragebildschirm mit verschiedenfarbigen Karten", "Una pantalla de preguntas personalizada de Qwizzy con tarjetas de distintos colores", "Una schermata domanda personalizzata di Qwizzy con schede di colori diversi"],
+  "A challenging timed Sudden Death question in Qwizzy": ["Eine anspruchsvolle Sudden-Death-Frage auf Zeit in Qwizzy", "Una exigente pregunta contrarreloj de Muerte súbita en Qwizzy", "Una difficile domanda a tempo di Sudden Death in Qwizzy"],
   "Qwizzy screen showing the available quiz modes": ["Qwizzy-Bildschirm mit den verfügbaren Spielmodi", "Pantalla de Qwizzy con los modos de juego disponibles", "Schermata di Qwizzy con le modalità di gioco disponibili"],
   "A timed geography question in Qwizzy": ["Eine zeitbegrenzte Geografiefrage in Qwizzy", "Una pregunta de geografía cronometrada en Qwizzy", "Una domanda di geografia a tempo in Qwizzy"],
   "A Sudden Death question in Qwizzy": ["Eine Sudden-Death-Frage in Qwizzy", "Una pregunta de Muerte súbita en Qwizzy", "Una domanda Sudden Death in Qwizzy"],
   "Qwizzy Online Duel setup with friend code and opponent options": ["Qwizzy-Online-Duell mit Freundescode und Gegnerauswahl", "Configuración del duelo en línea de Qwizzy con código de amigo y opciones de rival", "Configurazione del duello online di Qwizzy con codice amico e opzioni avversario"],
-  "Qwizzy Last Man Standing setup for up to ten players": ["Qwizzy Last Man Standing für bis zu zehn Spieler", "Configuración de Último en pie de Qwizzy para hasta diez jugadores", "Configurazione Last Man Standing di Qwizzy per un massimo di dieci giocatori"]
+  "Qwizzy Last Man Standing setup with ten named players": ["Qwizzy Last Man Standing mit zehn benannten Spielern", "Configuración de Último en pie de Qwizzy con diez jugadores identificados", "Configurazione Last Man Standing di Qwizzy con dieci giocatori nominati"]
 };
 
 const dictionaries = Object.fromEntries(LANGS.slice(1).map((lang, i) => [lang, Object.fromEntries(Object.entries(rows).map(([key, values]) => [key, values[i]]))]));
