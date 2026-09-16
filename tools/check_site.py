@@ -43,6 +43,11 @@ def resolves(reference):
 
 
 errors = []
+app_ads = PUBLIC / "app-ads.txt"
+expected_app_ads = "google.com, pub-7524861399907019, DIRECT, f08c47fec0942fa0"
+if not app_ads.exists() or app_ads.read_text(encoding="utf-8").strip() != expected_app_ads:
+    errors.append("app-ads.txt must contain the verified Qwizzy AdMob publisher record")
+
 for html_file in sorted(PUBLIC.glob("*.html")):
     parser = PageParser()
     parser.feed(html_file.read_text(encoding="utf-8"))
