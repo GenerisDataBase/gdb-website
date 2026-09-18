@@ -198,6 +198,9 @@ const rows = {
   "Party mode": ["Partymodus", "Modo fiesta", "Modalità party"],
   "Who will be the last standing?": ["Wer bleibt als Letzter übrig?", "¿Quién será el último en pie?", "Chi sarà l'ultimo a rimanere?"],
   "Bring together two to ten players on one device and keep answering until only one remains.": ["Bringe zwei bis zehn Spieler an einem Gerät zusammen und beantwortet Fragen, bis nur noch einer übrig ist.", "Reúne de dos a diez jugadores en un dispositivo y seguid respondiendo hasta que solo quede uno.", "Riunisci da due a dieci giocatori su un dispositivo e continuate a rispondere finché ne rimane solo uno."],
+  "Moderator mode": ["Moderator-Modus", "Modo Moderador", "Modalità Moderatore"],
+  "Host the perfect quiz night.": ["Veranstalte den perfekten Quizabend.", "Organiza la noche de preguntas perfecta.", "Organizza la serata quiz perfetta."],
+  "Keep the answer hidden from players, reveal it when you are ready and let everyone join in.": ["Halte die Lösung vor den Mitspielenden verborgen, decke sie im richtigen Moment auf und lass alle mitraten.", "Mantén la respuesta oculta para los jugadores, revélala cuando quieras y deja que todos participen.", "Tieni nascosta la risposta ai giocatori, rivelala quando vuoi e fai partecipare tutti."],
   "Questions in the library": ["Fragen in der Bibliothek", "Preguntas en la biblioteca", "Domande nella raccolta"],
   "Categories": ["Kategorien", "Categorías", "Categorie"],
   "Difficulty levels": ["Schwierigkeitsstufen", "Niveles de dificultad", "Livelli di difficoltà"],
@@ -255,7 +258,8 @@ const rows = {
   "A timed geography question in Qwizzy": ["Eine zeitbegrenzte Geografiefrage in Qwizzy", "Una pregunta de geografía cronometrada en Qwizzy", "Una domanda di geografia a tempo in Qwizzy"],
   "A Sudden Death question in Qwizzy": ["Eine Sudden-Death-Frage in Qwizzy", "Una pregunta de Muerte súbita en Qwizzy", "Una domanda Sudden Death in Qwizzy"],
   "Qwizzy Online Duel setup with friend code and opponent options": ["Qwizzy-Online-Duell mit Freundescode und Gegnerauswahl", "Configuración del duelo en línea de Qwizzy con código de amigo y opciones de rival", "Configurazione del duello online di Qwizzy con codice amico e opzioni avversario"],
-  "Qwizzy Last Man Standing setup with ten named players": ["Qwizzy Last Man Standing mit zehn benannten Spielern", "Configuración de Último en pie de Qwizzy con diez jugadores identificados", "Configurazione Last Man Standing di Qwizzy con dieci giocatori nominati"]
+  "Qwizzy Last Man Standing setup with ten named players": ["Qwizzy Last Man Standing mit zehn benannten Spielern", "Configuración de Último en pie de Qwizzy con diez jugadores identificados", "Configurazione Last Man Standing di Qwizzy con dieci giocatori nominati"],
+  "Qwizzy Moderator mode with the correct answer visible only to the host": ["Qwizzy-Moderator-Modus, bei dem nur die moderierende Person die richtige Antwort sieht", "Modo Moderador de Qwizzy, donde solo quien modera ve la respuesta correcta", "Modalità Moderatore di Qwizzy, in cui solo chi presenta vede la risposta corretta"]
 };
 
 const dictionaries = Object.fromEntries(LANGS.slice(1).map((lang, i) => [lang, Object.fromEntries(Object.entries(rows).map(([key, values]) => [key, values[i]]))]));
