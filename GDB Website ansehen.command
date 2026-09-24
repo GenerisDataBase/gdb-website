@@ -7,7 +7,7 @@
 #
 set -u
 
-SITE_DIR="$HOME/Desktop/gdb-website"
+SITE_DIR="$HOME/Desktop/GDB Website"
 PORT=5173
 URL="http://localhost:$PORT"
 
@@ -25,7 +25,7 @@ cat <<'BANNER'
 BANNER
 
 if [ ! -f "$SITE_DIR/serve.py" ]; then
-  echo "   ✗ Der Ordner »gdb-website« liegt nicht auf dem Schreibtisch."
+  echo "   ✗ Der Ordner »GDB Website« liegt nicht auf dem Schreibtisch."
   echo
   echo "     Erwartet:  $SITE_DIR"
   echo
