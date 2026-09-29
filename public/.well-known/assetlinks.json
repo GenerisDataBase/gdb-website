@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "de.gianluca.qwizzy",
+      "sha256_cert_fingerprints": [
+        "46:CA:CD:04:D1:E4:39:AE:9A:5F:D1:6A:62:F0:A6:38:F7:2F:F9:06:01:1A:CB:CF:92:C0:4C:20:ED:E0:3F:FB",
+        "00:35:C9:4F:8D:3E:99:B1:47:70:64:61:95:07:02:F0:68:B7:E4:E0:4A:CE:5D:6B:D0:26:60:6E:36:2D:ED:C6"
+      ]
+    }
+  }
+]

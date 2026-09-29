@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["XWZRAB6BHS.de.gianluca.qwizzy"],
+        "components": [
+          {"/": "/qwizzy-invite", "?": "token=*"}
+        ]
+      }
+    ]
+  }
+}

@@ -19,7 +19,7 @@ if output.exists():
     shutil.rmtree(output)
 shutil.copytree(source, output)
 
-for page in ("products", "qwizzy", "qwizzy-badges", "qwizzy-account-deletion", "contact", "imprint", "privacy", "admin", "setup"):
+for page in ("products", "qwizzy", "qwizzy-badges", "qwizzy-account-deletion", "qwizzy-invite", "contact", "imprint", "privacy", "admin", "setup"):
     target = output / page
     target.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source / f"{page}.html", target / "index.html")
