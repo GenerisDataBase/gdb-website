@@ -1,41 +1,108 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Qwizzy Einladung verschicken</title>
-  <meta name="description" content="Accept a Qwizzy invitation and play a round with a friend.">
+  <title>Qwizzy Einladung</title>
+  <meta name="description" content="Du wurdest zu einer Qwizzy-Runde eingeladen.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Qwizzy">
-  <meta property="og:title" content="Qwizzy Einladung verschicken">
-  <meta property="og:description" content="Du wurdest zu einer Qwizzy-Runde eingeladen.">
+  <meta property="og:title" content="Qwizzy Einladung">
+  <meta property="og:description" content="Nimm eine Qwizzy-Runde mit deinen Freunden an.">
   <meta property="og:url" content="https://generisdatabase.com/qwizzy-invite">
   <meta property="og:image" content="https://generisdatabase.com/assets/img/qwizzy-app-icon.png">
-  <meta property="og:image:width" content="1024">
-  <meta property="og:image:height" content="1024">
-  <meta property="og:image:type" content="image/png">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Qwizzy Einladung verschicken">
-  <meta name="twitter:description" content="Du wurdest zu einer Qwizzy-Runde eingeladen.">
+  <meta name="twitter:title" content="Qwizzy Einladung">
+  <meta name="twitter:description" content="Nimm eine Qwizzy-Runde mit deinen Freunden an.">
   <meta name="twitter:image" content="https://generisdatabase.com/assets/img/qwizzy-app-icon.png">
   <link rel="icon" type="image/png" href="/assets/img/qwizzy-app-icon.png">
   <link rel="apple-touch-icon" href="/assets/img/qwizzy-app-icon.png">
   <link rel="canonical" href="https://generisdatabase.com/qwizzy-invite">
   <style>
-    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #080b16; color: #f7f7ff; }
-    main { width: min(92vw, 480px); padding: 36px 28px; text-align: center; border: 1px solid #5367ff88; border-radius: 28px; background: #14192aee; box-shadow: 0 20px 60px #0008; }
-    h1 { margin: 0 0 12px; color: #83f6c0; }
-    p { line-height: 1.5; color: #d8dcf0; }
-    a { display: inline-block; margin-top: 18px; padding: 13px 20px; border-radius: 999px; background: #6c5cff; color: #fff; font-weight: 700; text-decoration: none; }
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 22px; background: radial-gradient(circle at 20% 0%, #253268 0, transparent 45%), #080b16; color: #f7f7ff; }
+    main { width: min(100%, 500px); padding: 34px 26px 28px; text-align: center; border: 1px solid #5367ff88; border-radius: 30px; background: linear-gradient(145deg, #171d38f2, #0e1224f2); box-shadow: 0 24px 70px #000a; }
+    .mark { width: 72px; height: 72px; margin: 0 auto 12px; border-radius: 22px; display: grid; place-items: center; background: linear-gradient(145deg, #6c5cff, #ed2f90); font-size: 42px; font-weight: 800; }
+    h1 { margin: 0 0 10px; color: #83f6c0; font-size: 30px; }
+    p { line-height: 1.5; color: #d8dcf0; margin: 10px 0; }
+    .details { margin: 22px 0 14px; padding: 16px; border-radius: 18px; text-align: left; background: #ffffff0d; border: 1px solid #ffffff1c; }
+    .detail-row { display: flex; justify-content: space-between; gap: 18px; padding: 7px 0; }
+    .detail-row + .detail-row { border-top: 1px solid #ffffff14; }
+    .label { color: #aeb7db; }
+    .value { text-align: right; font-weight: 700; color: #f6f0ff; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    button, .store { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; border-radius: 999px; border: 0; padding: 12px 18px; font: inherit; font-weight: 750; text-decoration: none; cursor: pointer; }
+    #accept { background: linear-gradient(100deg, #6c5cff, #a43fe7); color: #fff; }
+    #decline { background: #ffffff12; border: 1px solid #ffffff2b; color: #d8dcf0; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .stores { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
+    .store { min-height: 42px; padding: 10px 15px; background: #ffffff10; border: 1px solid #ffffff22; color: #dfe3fa; font-size: 14px; }
+    #status { min-height: 24px; margin-top: 14px; color: #aab4dc; font-size: 14px; }
+    .fine-print { color: #7f89ae; font-size: 12px; margin-top: 20px; }
   </style>
 </head>
 <body>
   <main>
-    <h1>Qwizzy</h1>
-    <p>Du wurdest zu einer Qwizzy-Runde eingeladen. Installiere Qwizzy und tippe anschließend erneut auf die Einladung, um sie anzunehmen.</p>
-    <a href="https://apps.apple.com/app/id6798674761">Qwizzy im App Store öffnen</a>
+    <div class="mark" aria-hidden="true">Q</div>
+    <h1>Qwizzy Einladung</h1>
+    <p id="intro">Du wurdest zu einer Qwizzy-Runde eingeladen.</p>
+    <section class="details" aria-live="polite">
+      <div class="detail-row"><span class="label">Gegner</span><strong class="value" id="opponent">wird geladen …</strong></div>
+      <div class="detail-row"><span class="label">Zielpunktzahl</span><strong class="value" id="target">wird geladen …</strong></div>
+    </section>
+    <div class="actions">
+      <button id="accept" type="button" disabled>Einladung annehmen</button>
+      <button id="decline" type="button" disabled>Einladung ablehnen</button>
+    </div>
+    <div id="status" role="status"></div>
+    <div class="stores">
+      <a class="store" href="https://apps.apple.com/app/id6798674761">Qwizzy im App Store öffnen</a>
+      <a class="store" href="https://play.google.com/store/apps/details?id=de.gianluca.qwizzy">Qwizzy bei Google Play öffnen</a>
+    </div>
+    <p class="fine-print">Wenn die App installiert ist, öffnet „Annehmen“ Qwizzy direkt. Der Browser kann aus Sicherheitsgründen nicht immer automatisch geschlossen werden.</p>
   </main>
+  <script>
+    const SUPABASE_URL = "https://hvufojydbbytyastykom.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_mTENufIAAy8dXqiUqpdLlA_MOOqGvrr";
+    const token = new URLSearchParams(location.search).get("token") || "";
+    const tokenIsValid = /^[a-f0-9]{32,64}$/.test(token);
+    const accept = document.getElementById("accept");
+    const decline = document.getElementById("decline");
+    const status = document.getElementById("status");
+    const opponent = document.getElementById("opponent");
+    const target = document.getElementById("target");
+    const intro = document.getElementById("intro");
+    async function rpc(name, payload) {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
+      if (!response.ok) throw new Error(`request_${response.status}`);
+      return response.json();
+    }
+    function row(result) { return Array.isArray(result) ? result[0] : result; }
+    function setStatus(text) { status.textContent = text; }
+    function openInApp() { if (!tokenIsValid) return; setStatus("Qwizzy wird geöffnet …"); window.location.href = `qwizzy://qwizzy-invite?token=${encodeURIComponent(token)}`; window.setTimeout(() => setStatus("Wenn Qwizzy nicht geöffnet wurde, installiere die App unten und tippe danach erneut auf „Annehmen“."), 1400); }
+    async function declineInvite() {
+      if (!tokenIsValid) return;
+      decline.disabled = true; accept.disabled = true; setStatus("Die Einladung wird abgelehnt …");
+      try {
+        const result = row(await rpc("decline_qwizzy_share_invitation", { invite_token: token }));
+        if (result?.status === "declined") { setStatus("Die Einladung wurde abgelehnt. Du kannst dieses Fenster jetzt schließen."); try { window.close(); } catch (_) {} }
+        else if (result?.status === "claimed") setStatus("Diese Einladung wurde bereits angenommen.");
+        else if (result?.status === "expired") setStatus("Diese Einladung ist abgelaufen.");
+        else setStatus("Diese Einladung ist nicht mehr verfügbar.");
+      } catch (_) { decline.disabled = false; accept.disabled = false; setStatus("Die Einladung konnte gerade nicht abgelehnt werden. Bitte versuche es erneut."); }
+    }
+    accept.addEventListener("click", openInApp); decline.addEventListener("click", declineInvite);
+    if (!tokenIsValid) { intro.textContent = "Dieser Einladungslink ist ungültig oder unvollständig."; opponent.textContent = "—"; target.textContent = "—"; setStatus("Bitte öffne den vollständigen Link aus deiner Nachricht."); }
+    else rpc("preview_qwizzy_share_invitation", { invite_token: token }).then((result) => {
+      const invitation = row(result); const state = invitation?.status;
+      opponent.textContent = invitation?.inviter_name || "Spieler"; target.textContent = Number.isInteger(invitation?.target_score) ? invitation.target_score : "—";
+      if (state === "pending") { intro.textContent = `${invitation.inviter_name || "Ein Spieler"} hat dich zu einer Qwizzy-Runde eingeladen.`; accept.disabled = false; decline.disabled = false; setStatus("Du kannst die Runde in Qwizzy annehmen oder die Einladung ablehnen."); }
+      else if (state === "claimed") setStatus("Diese Einladung wurde bereits angenommen.");
+      else if (state === "expired") setStatus("Diese Einladung ist abgelaufen.");
+      else setStatus("Diese Einladung ist nicht mehr verfügbar.");
+    }).catch(() => setStatus("Die Einladungsdetails konnten gerade nicht geladen werden."));
+  </script>
 </body>
 </html>
