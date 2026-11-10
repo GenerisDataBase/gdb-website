@@ -39,6 +39,7 @@
     button:disabled { opacity: .45; cursor: not-allowed; }
     .stores { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
     .store { min-height: 42px; padding: 10px 15px; background: #ffffff10; border: 1px solid #ffffff22; color: #dfe3fa; font-size: 14px; }
+    #stay-browser { display: inline-block; margin-top: 10px; color: #aab4dc; font-size: 13px; }
     #status { min-height: 24px; margin-top: 14px; color: #aab4dc; font-size: 14px; }
     .fine-print { color: #7f89ae; font-size: 12px; margin-top: 20px; }
   </style>
@@ -57,6 +58,7 @@
       <button id="decline" type="button" disabled>Einladung ablehnen</button>
     </div>
     <div id="status" role="status"></div>
+    <a id="stay-browser" href="#" hidden>Im Browser bleiben</a>
     <div class="stores">
       <a class="store" href="https://apps.apple.com/app/id6798674761">Qwizzy im App Store öffnen</a>
       <a class="store" href="https://play.google.com/store/apps/details?id=de.gianluca.qwizzy">Qwizzy bei Google Play öffnen</a>
@@ -74,35 +76,131 @@
     const opponent = document.getElementById("opponent");
     const target = document.getElementById("target");
     const intro = document.getElementById("intro");
+    const stayBrowser = document.getElementById("stay-browser");
+    let autoOpenTimer = null;
+    let autoOpenCancelled = false;
+    // Universal Links already open Qwizzy and hide this page. A later
+    // qwizzy:// redirect would show iOS "In Qwizzy öffnen?" over the tour.
+    let pageWasBackgrounded = document.visibilityState !== "visible";
+
+    function cancelAutomaticHandoff() {
+      autoOpenCancelled = true;
+      if (autoOpenTimer !== null) {
+        window.clearTimeout(autoOpenTimer);
+        autoOpenTimer = null;
+      }
+    }
+
+    function notePageBackgrounded() {
+      pageWasBackgrounded = true;
+      cancelAutomaticHandoff();
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") notePageBackgrounded();
+    });
+    window.addEventListener("pagehide", notePageBackgrounded);
+    window.addEventListener("blur", notePageBackgrounded);
+
     async function rpc(name, payload) {
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
+        method: "POST",
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
       if (!response.ok) throw new Error(`request_${response.status}`);
       return response.json();
     }
     function row(result) { return Array.isArray(result) ? result[0] : result; }
     function setStatus(text) { status.textContent = text; }
-    function openInApp() { if (!tokenIsValid) return; setStatus("Qwizzy wird geöffnet …"); window.location.href = `qwizzy://qwizzy-invite?token=${encodeURIComponent(token)}`; window.setTimeout(() => setStatus("Wenn Qwizzy nicht geöffnet wurde, installiere die App unten und tippe danach erneut auf „Annehmen“."), 1400); }
+
+    function openInApp(options = {}) {
+      if (!tokenIsValid) return;
+      if (options.automatic && (autoOpenCancelled || pageWasBackgrounded)) return;
+      setStatus("Qwizzy wird geöffnet …");
+      window.location.href = `qwizzy://qwizzy-invite?token=${encodeURIComponent(token)}`;
+      window.setTimeout(() => setStatus("Wenn Qwizzy nicht geöffnet wurde, installiere die App unten und tippe danach erneut auf „Annehmen“."), 1400);
+    }
+
+    function stayInBrowser(event) {
+      event.preventDefault();
+      cancelAutomaticHandoff();
+      stayBrowser.hidden = true;
+      setStatus("Du bleibst im Browser. Du kannst die Einladung unten weiterhin annehmen oder ablehnen.");
+    }
+
+    function scheduleAppHandoff() {
+      if (pageWasBackgrounded || document.visibilityState !== "visible") return;
+      stayBrowser.hidden = false;
+      autoOpenTimer = window.setTimeout(() => {
+        if (!pageWasBackgrounded && document.visibilityState === "visible") {
+          openInApp({ automatic: true });
+        }
+      }, 1100);
+    }
+
     async function declineInvite() {
       if (!tokenIsValid) return;
-      decline.disabled = true; accept.disabled = true; setStatus("Die Einladung wird abgelehnt …");
+      decline.disabled = true;
+      accept.disabled = true;
+      setStatus("Die Einladung wird abgelehnt …");
       try {
         const result = row(await rpc("decline_qwizzy_share_invitation", { invite_token: token }));
-        if (result?.status === "declined") { setStatus("Die Einladung wurde abgelehnt. Du kannst dieses Fenster jetzt schließen."); try { window.close(); } catch (_) {} }
-        else if (result?.status === "claimed") setStatus("Diese Einladung wurde bereits angenommen.");
-        else if (result?.status === "expired") setStatus("Diese Einladung ist abgelaufen.");
-        else setStatus("Diese Einladung ist nicht mehr verfügbar.");
-      } catch (_) { decline.disabled = false; accept.disabled = false; setStatus("Die Einladung konnte gerade nicht abgelehnt werden. Bitte versuche es erneut."); }
+        if (result?.status === "declined") {
+          setStatus("Die Einladung wurde abgelehnt. Du kannst dieses Fenster jetzt schließen.");
+          try { window.close(); } catch (_) { /* Browser tabs may not be script-closable. */ }
+        } else if (result?.status === "claimed") {
+          setStatus("Diese Einladung wurde bereits angenommen.");
+        } else if (result?.status === "expired") {
+          setStatus("Diese Einladung ist abgelaufen.");
+        } else {
+          setStatus("Diese Einladung ist nicht mehr verfügbar.");
+        }
+      } catch (_) {
+        decline.disabled = false;
+        accept.disabled = false;
+        setStatus("Die Einladung konnte gerade nicht abgelehnt werden. Bitte versuche es erneut.");
+      }
     }
-    accept.addEventListener("click", openInApp); decline.addEventListener("click", declineInvite);
-    if (!tokenIsValid) { intro.textContent = "Dieser Einladungslink ist ungültig oder unvollständig."; opponent.textContent = "—"; target.textContent = "—"; setStatus("Bitte öffne den vollständigen Link aus deiner Nachricht."); }
-    else rpc("preview_qwizzy_share_invitation", { invite_token: token }).then((result) => {
-      const invitation = row(result); const state = invitation?.status;
-      opponent.textContent = invitation?.inviter_name || "Spieler"; target.textContent = Number.isInteger(invitation?.target_score) ? invitation.target_score : "—";
-      if (state === "pending") { intro.textContent = `${invitation.inviter_name || "Ein Spieler"} hat dich zu einer Qwizzy-Runde eingeladen.`; accept.disabled = false; decline.disabled = false; setStatus("Du kannst die Runde in Qwizzy annehmen oder die Einladung ablehnen."); }
-      else if (state === "claimed") setStatus("Diese Einladung wurde bereits angenommen.");
-      else if (state === "expired") setStatus("Diese Einladung ist abgelaufen.");
-      else setStatus("Diese Einladung ist nicht mehr verfügbar.");
-    }).catch(() => setStatus("Die Einladungsdetails konnten gerade nicht geladen werden."));
+
+    accept.addEventListener("click", openInApp);
+    decline.addEventListener("click", declineInvite);
+    stayBrowser.addEventListener("click", stayInBrowser);
+
+    if (!tokenIsValid) {
+      intro.textContent = "Dieser Einladungslink ist ungültig oder unvollständig.";
+      opponent.textContent = "—";
+      target.textContent = "—";
+      setStatus("Bitte öffne den vollständigen Link aus deiner Nachricht.");
+    } else {
+      rpc("preview_qwizzy_share_invitation", { invite_token: token })
+        .then((result) => {
+          const invitation = row(result);
+          const state = invitation?.status;
+          opponent.textContent = invitation?.inviter_name || "Spieler";
+          target.textContent = Number.isInteger(invitation?.target_score) ? invitation.target_score : "—";
+          if (state === "pending") {
+            intro.textContent = `${invitation.inviter_name || "Ein Spieler"} hat dich zu einer Qwizzy-Runde eingeladen.`;
+            accept.disabled = false;
+            decline.disabled = false;
+            stayBrowser.hidden = false;
+            setStatus("Du kannst die Runde in Qwizzy annehmen oder die Einladung ablehnen.");
+            // A normal tap on a verified Universal Link opens Qwizzy directly.
+            // If the browser is shown instead, make the same hand-off once the
+            // invitation is known to be valid. The explicit browser link keeps
+            // the fallback available for people who intentionally stay here.
+            scheduleAppHandoff();
+          } else if (state === "claimed") {
+            setStatus("Diese Einladung wurde bereits angenommen.");
+            scheduleAppHandoff();
+          } else if (state === "expired") {
+            setStatus("Diese Einladung ist abgelaufen.");
+          } else {
+            setStatus("Diese Einladung ist nicht mehr verfügbar.");
+          }
+        })
+        .catch(() => setStatus("Die Einladungsdetails konnten gerade nicht geladen werden."));
+    }
   </script>
 </body>
 </html>
