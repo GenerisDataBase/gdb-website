@@ -6,7 +6,9 @@ rules_version = '2';
 // Deploy with:  firebase deploy --only firestore:rules
 //
 // Model
-//   messages/{id}  write-only for visitors, readable only by the owner
+//   messages/{id}: server-created contacts, readable only by the verified admin.
+//   Required: name, email, subject, body, createdAt, handled.
+//   Optional server timestamp: emailNotifiedAt. Clients may only toggle handled.
 // ============================================================================
 
 service cloud.firestore {
@@ -23,19 +25,25 @@ service cloud.firestore {
 
     // ----------------------------------------------------------------- messages
     function validMessage(d) {
-      return d.keys().hasOnly(['name','email','subject','body','createdAt','handled'])
+      return d.keys().hasAll(['name','email','subject','body','createdAt','handled'])
+          && d.keys().hasOnly(['name','email','subject','body','createdAt','handled','emailNotifiedAt'])
           && d.name is string    && d.name.size() >= 2  && d.name.size() <= 80
           && d.email is string   && d.email.size() >= 5 && d.email.size() <= 120
           && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
           && d.subject is string && d.subject.size() > 0 && d.subject.size() <= 60
           && d.body is string    && d.body.size() >= 10 && d.body.size() <= 4000
-          && d.createdAt == request.time
-          && d.handled == false;
+          && d.createdAt is timestamp
+          && d.handled is bool
+          && (!('emailNotifiedAt' in d) || d.emailNotifiedAt is timestamp);
     }
 
     match /messages/{mid} {
-      allow create: if validMessage(request.resource.data);
-      allow read, update, delete: if isAdmin();
+      // The rate-limited contact Edge Function uses the Admin SDK/IAM path.
+      // Public SDK writes would bypass its honeypot and IP rate limit.
+      allow create: if false;
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin() && validMessage(request.resource.data)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['handled']);
     }
 
     // Everything not matched above stays closed.

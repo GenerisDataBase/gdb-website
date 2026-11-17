@@ -32,6 +32,8 @@ jobs:
           node tools/test_account_deletion.mjs
           node tools/test_badge_catalog.mjs
           node tools/test_privacy_translations.mjs
+          node tools/test_contact.mjs
+          python3 -m unittest discover -s tools -p test_contact_worker.py
 
       - name: Prepare static site with clean URLs
         run: python3 tools/build_site.py --version "${GITHUB_SHA::8}"

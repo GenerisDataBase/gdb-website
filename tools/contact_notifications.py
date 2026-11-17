@@ -16,24 +16,33 @@ COLLECTION = "messages"
 
 
 def fetch_unnotified(token: str) -> list[dict]:
-    query = {
-        "structuredQuery": {
+    messages = []
+    cursor = None
+    while len(messages) < 200:
+        structured = {
             "from": [{"collectionId": COLLECTION}],
-            "orderBy": [{"field": {"fieldPath": "createdAt"}, "direction": "ASCENDING"}],
+            "orderBy": [
+                {"field": {"fieldPath": "createdAt"}, "direction": "ASCENDING"},
+                {"field": {"fieldPath": "__name__"}, "direction": "ASCENDING"},
+            ],
             "limit": 200,
         }
-    }
-    rows = api(token, "POST", f"{FIRESTORE}:runQuery", query)
-    messages = []
-    for row in rows:
-        document = row.get("document")
-        if not document:
-            continue
-        item = {key: decode(value) for key, value in document.get("fields", {}).items()}
-        if item.get("emailNotifiedAt"):
-            continue
-        item["_name"] = document["name"]
-        messages.append(item)
+        if cursor is not None:
+            structured["startAt"] = {"values": cursor, "before": False}
+        rows = api(token, "POST", f"{FIRESTORE}:runQuery", {"structuredQuery": structured})
+        documents = [row["document"] for row in rows if row.get("document")]
+        for document in documents:
+            item = {key: decode(value) for key, value in document.get("fields", {}).items()}
+            if item.get("emailNotifiedAt"):
+                continue
+            item["_name"] = document["name"]
+            messages.append(item)
+            if len(messages) >= 200:
+                break
+        if len(documents) < 200:
+            break
+        last = documents[-1]
+        cursor = [last["fields"]["createdAt"], {"referenceValue": last["name"]}]
     return messages
 
 

@@ -1,3 +1,4 @@
+import { sendContactMessage } from "./contact-api.mjs";
 /* ==========================================================================
    Generis Data Base — Firestore data layer
    Wraps every read/write the website performs, so the pages stay readable.
@@ -177,71 +178,7 @@ export const removeQuestion = (id) => deleteDoc(doc(db, QUESTIONS, id));
    Contact messages
    Anyone may create one, only the owner may read them.
    -------------------------------------------------------------------------- */
-export async function sendMessage(input) {
-  const payload = {
-    name: input.name.trim().slice(0, 80),
-    email: input.email.trim().slice(0, 120),
-    subject: (input.subject || "General").slice(0, 60),
-    body: input.body.trim().slice(0, 4000),
-    createdAt: serverTimestamp(),
-    handled: false,
-  };
-  const directPayload = {
-    name: payload.name,
-    email: payload.email,
-    subject: payload.subject,
-    body: payload.body,
-    website: input.website || "",
-  };
-  const controller = new AbortController();
-  const directTimer = setTimeout(() => controller.abort(), 20000);
-  try {
-    const response = await fetch(
-      "https://hvufojydbbytyastykom.supabase.co/functions/v1/send-website-contact",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(directPayload),
-        signal: controller.signal,
-      },
-    );
-    const result = await response.json().catch(() => null);
-    if (result?.ok && result?.stored) return result;
-    if (response.status === 429) {
-      const error = new Error("Too many messages. Please wait before trying again.");
-      error.code = "gdb/rate-limited";
-      throw error;
-    }
-  } catch (error) {
-    if (error?.code === "gdb/rate-limited") throw error;
-    console.warn("Direct notification unavailable; using secure queue.", error);
-  } finally {
-    clearTimeout(directTimer);
-  }
-
-  // The direct service is unavailable: retain the message in Firestore so the
-  // scheduled GitHub worker can deliver it later instead of losing it.
-  // Firestore retries network failures internally and its write promise can
-  // otherwise remain pending forever. The UI needs a definite outcome so a
-  // visitor can retry instead of being stuck on “Sending…”.
-  const timeoutMs = 15000;
-  let timer;
-  try {
-    await Promise.race([
-      addDoc(collection(db, MESSAGES), payload),
-      new Promise((_, reject) => {
-        timer = setTimeout(() => {
-          const err = new Error("The message service did not respond in time. Please check your connection and try again.");
-          err.code = "gdb/request-timeout";
-          reject(err);
-        }, timeoutMs);
-      }),
-    ]);
-    return { ok: true, stored: true, delivery: "queued" };
-  } finally {
-    clearTimeout(timer);
-  }
-}
+export const sendMessage = sendContactMessage;
 
 export async function listMessages() {
   const snap = await getDocs(query(collection(db, MESSAGES), orderBy("createdAt", "desc"), fbLimit(200)));
