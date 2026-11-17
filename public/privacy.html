@@ -97,7 +97,8 @@
       <p>Contact submissions are sent through a server-side function operated by Supabase, Inc. and delivered by
         the email service Resend, Inc. The submitted name, email address, subject and message are processed only to
         deliver and answer the request. If direct delivery is temporarily unavailable, the message remains stored
-        in Cloud Firestore and is delivered by the existing fallback process.</p>
+        in Cloud Firestore for review. A temporary provider failure can trigger a fallback email.
+        When delivery is uncertain, we keep the contact in the admin inbox for manual review.</p>
 
       <h2>What this site does not do</h2>
       <ul>

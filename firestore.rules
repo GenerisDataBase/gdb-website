@@ -8,7 +8,8 @@ rules_version = '2';
 // Model
 //   messages/{id}: server-created contacts, readable only by the verified admin.
 //   Required: name, email, subject, body, createdAt, handled.
-//   Optional server timestamp: emailNotifiedAt. Clients may only toggle handled.
+//   Optional server delivery metadata: emailNotifiedAt, emailDeliveryId and emailDeliveryState.
+//   Clients may only toggle handled.
 // ============================================================================
 
 service cloud.firestore {
@@ -26,7 +27,7 @@ service cloud.firestore {
     // ----------------------------------------------------------------- messages
     function validMessage(d) {
       return d.keys().hasAll(['name','email','subject','body','createdAt','handled'])
-          && d.keys().hasOnly(['name','email','subject','body','createdAt','handled','emailNotifiedAt'])
+          && d.keys().hasOnly(['name','email','subject','body','createdAt','handled','emailNotifiedAt','emailDeliveryId','emailDeliveryState'])
           && d.name is string    && d.name.size() >= 2  && d.name.size() <= 80
           && d.email is string   && d.email.size() >= 5 && d.email.size() <= 120
           && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
@@ -34,7 +35,13 @@ service cloud.firestore {
           && d.body is string    && d.body.size() >= 10 && d.body.size() <= 4000
           && d.createdAt is timestamp
           && d.handled is bool
-          && (!('emailNotifiedAt' in d) || d.emailNotifiedAt is timestamp);
+          && (!('emailNotifiedAt' in d) || d.emailNotifiedAt is timestamp)
+          && (!('emailDeliveryId' in d) || (
+            d.emailDeliveryId is string && d.emailDeliveryId.size() <= 256
+          ))
+          && (!('emailDeliveryState' in d) || d.emailDeliveryState in [
+            'resend_inflight', 'smtp_ready', 'smtp_inflight', 'needs_review', 'sent'
+          ]);
     }
 
     match /messages/{mid} {

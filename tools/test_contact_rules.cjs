@@ -10,6 +10,9 @@ const {doc,setDoc,getDoc,getDocs,collection,updateDoc,deleteDoc,Timestamp}=deps(
   try{
     const data={name:'Local fixture',email:'local@example.invalid',subject:'General',body:'Local test message.',createdAt:Timestamp.now(),handled:false};
     await env.withSecurityRulesDisabled(async c=>setDoc(doc(c.firestore(),'messages','existing'),data));
+    await env.withSecurityRulesDisabled(async c=>setDoc(doc(c.firestore(),'messages','delivered'),{
+      ...data,emailNotifiedAt:Timestamp.now(),emailDeliveryId:'local-delivery-fixture',emailDeliveryState:'sent',
+    }));
     const publicDb=env.unauthenticatedContext().firestore();
     const other=env.authenticatedContext('other',{email:'other@example.invalid',email_verified:true}).firestore();
     const unverified=env.authenticatedContext('unverified',{email:'generisdatabase@gmail.com',email_verified:false}).firestore();
@@ -23,6 +26,8 @@ const {doc,setDoc,getDoc,getDocs,collection,updateDoc,deleteDoc,Timestamp}=deps(
     }
     await assertSucceeds(getDocs(collection(admin,'messages')));
     await assertSucceeds(updateDoc(doc(admin,'messages','existing'),{handled:true}));
+    await assertSucceeds(updateDoc(doc(admin,'messages','delivered'),{handled:true}));
+    await assertFails(updateDoc(doc(admin,'messages','delivered'),{emailDeliveryId:'replacement'}));
     for(const patch of [{body:'hijack'}, {name:'x'.repeat(10000)}, {createdAt:Timestamp.now()}, {extra:'pollution'}, {handled:'yes'}]){
       await assertFails(updateDoc(doc(admin,'messages','existing'),patch));
     }

@@ -138,6 +138,8 @@ function paintMessages() {
       <pre>${escape(m.body)}</pre>
       <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px">
         <a class="btn btn-sm" href="${mailto}">Reply by email</a>
+        ${['needs_review', 'resend_inflight', 'smtp_inflight'].includes(m.emailDeliveryState) && !m.emailNotifiedAt
+          ? '<span class="meta">Email delivery unconfirmed</span>' : ''}
         <button class="btn btn-ghost btn-sm" data-handled>${m.handled ? "Mark unhandled" : "Mark handled"}</button>
         <button class="btn btn-ghost btn-sm" data-delmsg style="color:var(--bad);border-color:color-mix(in srgb,var(--bad) 35%,transparent)">Delete</button>
       </div>

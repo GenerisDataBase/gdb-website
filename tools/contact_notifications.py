@@ -8,6 +8,9 @@ import os
 import smtplib
 import sys
 import time
+import urllib.error
+from datetime import datetime, timedelta, timezone
+from urllib.parse import urlencode
 from email.message import EmailMessage
 
 from weekly_export import FIRESTORE, access_token, api, decode
@@ -18,6 +21,7 @@ COLLECTION = "messages"
 def fetch_unnotified(token: str) -> list[dict]:
     messages = []
     cursor = None
+    settle_before = datetime.now(timezone.utc) - timedelta(minutes=10)
     while len(messages) < 200:
         structured = {
             "from": [{"collectionId": COLLECTION}],
@@ -35,7 +39,17 @@ def fetch_unnotified(token: str) -> list[dict]:
             item = {key: decode(value) for key, value in document.get("fields", {}).items()}
             if item.get("emailNotifiedAt"):
                 continue
+            delivery = item.get("emailDeliveryState")
+            if delivery is None:
+                # Legacy Edge versions had no state. Allow the normal direct
+                # attempt time to pass before considering older queued mail.
+                created = item.get("createdAt")
+                if not created or datetime.fromisoformat(created.replace("Z", "+00:00")) > settle_before:
+                    continue
+            elif delivery != "smtp_ready":
+                continue
             item["_name"] = document["name"]
+            item["_update_time"] = document.get("updateTime")
             messages.append(item)
             if len(messages) >= 200:
                 break
@@ -69,10 +83,29 @@ def notification(message: dict, sender: str, recipient: str) -> EmailMessage:
     return mail
 
 
-def mark_notified(token: str, message: dict) -> None:
-    stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    url = f"https://firestore.googleapis.com/v1/{message['_name']}?updateMask.fieldPaths=emailNotifiedAt"
-    api(token, "PATCH", url, {"fields": {"emailNotifiedAt": {"timestampValue": stamp}}})
+def change_delivery_state(token: str, message: dict, state: str, *, claim=False) -> bool:
+    fields = {"emailDeliveryState": {"stringValue": state}}
+    if state == "sent":
+        stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        fields["emailNotifiedAt"] = {"timestampValue": stamp}
+    params = [("updateMask.fieldPaths", field) for field in fields]
+    if claim:
+        if not message.get("_update_time"):
+            return False
+        params.append(("currentDocument.updateTime", message["_update_time"]))
+    else:
+        params.append(("currentDocument.exists", "true"))
+    url = f"https://firestore.googleapis.com/v1/{message['_name']}?{urlencode(params)}"
+    try:
+        api(token, "PATCH", url, {"fields": fields})
+    except SystemExit as error:
+        cause = error.__cause__
+        if claim and isinstance(cause, urllib.error.HTTPError) and cause.code in {400, 404, 409, 412}:
+            # The message vanished or changed after the query. Another worker
+            # or admin owns its new revision.
+            return False
+        raise SystemExit("Contact email state could not be saved") from None
+    return True
 
 
 def main() -> int:
@@ -94,10 +127,19 @@ def main() -> int:
     password = os.environ["GMAIL_APP_PASSWORD"]
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=60) as smtp:
         smtp.login(sender, password)
+        sent = 0
         for message in messages:
-            smtp.send_message(notification(message, sender, recipient))
-            mark_notified(token, message)
-    print(f"Sent and marked {len(messages)} contact notification(s).")
+            if not change_delivery_state(token, message, "smtp_inflight", claim=True):
+                continue
+            try:
+                smtp.send_message(notification(message, sender, recipient))
+            except (OSError, smtplib.SMTPException):
+                # Do not re-send an ambiguous SMTP attempt. The message and
+                # its in-progress status are visible in the admin inbox.
+                raise SystemExit("Contact email outcome needs review") from None
+            change_delivery_state(token, message, "sent")
+            sent += 1
+    print(f"Sent and marked {sent} contact notification(s).")
     return 0
 
 
